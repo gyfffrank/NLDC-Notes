@@ -1,0 +1,1856 @@
+\documentclass[11pt,letterpaper]{article}
+
+% ── Packages ──
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{physics}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,decorations.markings,calc,patterns}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{booktabs}
+\usepackage{cancel}
+\usepackage{bm}
+
+% ── Theorem environments ──
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+
+% ── tcolorbox styles ──
+\tcbuselibrary{skins,breakable}
+\newtcolorbox{keyresult}[1][]{colback=blue!5!white,colframe=blue!60!black,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{physicalnote}[1][]{colback=green!5!white,colframe=green!50!black,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{warningbox}[1][]{colback=red!5!white,colframe=red!60!black,
+  fonttitle=\bfseries,title={#1},breakable}
+
+% ── Header/Footer ──
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Nonlinear Dynamics and Chaos}
+\fancyhead[R]{\small\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ── Title formatting ──
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+% ── Custom commands ──
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\xdot}{\dot{x}}
+\newcommand{\xstar}{x^*}
+\newcommand{\thetadot}{\dot{\theta}}
+\newcommand{\fp}[1]{f'(#1)}
+\newcommand{\sgn}{\operatorname{sgn}}
+
+\begin{document}
+
+% ══════════════════════════════════════════════
+% TITLE PAGE
+% ══════════════════════════════════════════════
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\Huge\bfseries Nonlinear Dynamics and Chaos\par}
+\vspace{0.5cm}
+{\Large Comprehensive Lecture Notes\par}
+\vspace{1.5cm}
+{\large Based on the course following\\[6pt]
+\textit{Nonlinear Dynamics and Chaos} (3rd Edition)\\[4pt]
+by Steven H.\ Strogatz\par}
+\vspace{2cm}
+{\large Spring 2026\par}
+\vfill
+{\small These notes are self-contained and assume familiarity with
+multivariable calculus, linear algebra, and ordinary differential equations
+at the level of a mathematical methods of physics course.\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ══════════════════════════════════════════════
+% PART I: ONE-DIMENSIONAL FLOWS
+% ══════════════════════════════════════════════
+\part{One-Dimensional Flows}
+
+% ──────────────────────────────────────────────
+\section{Flows on the Line}\label{sec:flows-line}
+% ──────────────────────────────────────────────
+
+\subsection{First-Order ODEs and Autonomous Systems}
+
+The most general first-order ordinary differential equation (ODE) for a single
+real variable $x(t)$ is
+\begin{equation}\label{eq:general-1st}
+  \xdot = f(x,t),
+\end{equation}
+where the overdot denotes $\dd{x}/\dd{t}$.
+
+\begin{definition}[Autonomous ODE]
+An ODE of the form
+\begin{equation}\label{eq:autonomous}
+  \xdot = f(x)
+\end{equation}
+is called \textbf{autonomous} because the right-hand side does not depend
+explicitly on time $t$.  The function $f$ specifies the \emph{velocity}
+of the state $x$ on the real line.
+\end{definition}
+
+The system~\eqref{eq:autonomous} is \textbf{linear} if $f(x)=ax+b$ for
+constants $a,b$, and \textbf{nonlinear} otherwise.
+
+Given an initial condition $x(0)=x_0$, the solution $x(t)$ traces a
+trajectory on the real line.  Because $f$ depends only on $x$, the velocity
+at a given position $x$ is the same regardless of when the particle passes
+through $x$.  This is the hallmark of an autonomous system.
+
+\subsection{A Geometric Way of Thinking: The Phase Line}
+
+Rather than solving~\eqref{eq:autonomous} analytically (which is often
+impossible for nonlinear $f$), we adopt a \emph{geometric} approach.
+
+\medskip\noindent\textbf{Procedure.}
+\begin{enumerate}[leftmargin=2em]
+\item Plot $f(x)$ versus $x$.
+\item Where $f(x)>0$, the flow moves to the \emph{right} (increasing $x$);
+      where $f(x)<0$, the flow moves to the \emph{left}.
+\item Points where $f(\xstar)=0$ are at rest---they are called
+      \textbf{fixed points} (or equilibria, critical points, stationary
+      points).
+\end{enumerate}
+
+\begin{definition}[Fixed Point]
+A point $\xstar$ is a \textbf{fixed point} of $\xdot = f(x)$ if
+$f(\xstar)=0$.
+\end{definition}
+
+\begin{definition}[Stability of a Fixed Point---Informal]
+A fixed point $\xstar$ is
+\begin{itemize}[leftmargin=2em]
+\item \textbf{stable} (an ``attractor'') if nearby trajectories approach
+      $\xstar$ as $t\to\infty$;
+\item \textbf{unstable} (a ``repeller'') if nearby trajectories move away
+      from $\xstar$.
+\end{itemize}
+\end{definition}
+
+\noindent\textbf{Graphical rule.}
+Looking at the graph of $f(x)$: a fixed point where $f$ crosses from
+positive to negative (i.e., $\fp{\xstar}<0$) is stable; a crossing from
+negative to positive ($\fp{\xstar}>0$) is unstable.
+
+\begin{physicalnote}[Direction Field]
+For autonomous systems, the direction field has identical slope $f(x)$ at
+every point along a horizontal line $x = \text{const}$.  Solution
+trajectories in the $(t,x)$ plane are parallel translations of each other.
+The initial condition $x_0$ simply selects which trajectory the system
+follows.
+\end{physicalnote}
+
+\subsection{Linear Stability Analysis}\label{sec:lin-stab-1d}
+
+To make the stability criterion precise, we linearize near the fixed point.
+
+Let $\xstar$ be a fixed point and set $u = x - \xstar$ (a small
+perturbation).  Then
+\[
+  \dot{u} = \xdot = f(x) = f(\xstar) + \fp{\xstar}\,u + O(u^2).
+\]
+Since $f(\xstar)=0$, dropping higher-order terms gives the \emph{linearized
+equation}:
+\begin{equation}\label{eq:lin-1d}
+  \dot{u} \approx \fp{\xstar}\, u.
+\end{equation}
+This is a linear ODE with solution
+\begin{equation}\label{eq:lin-1d-soln}
+  u(t) = u_0 \, e^{\fp{\xstar}\, t}.
+\end{equation}
+
+\begin{keyresult}[Linear Stability Criterion (1D)]
+Let $\xstar$ be a fixed point of $\xdot = f(x)$.
+\begin{itemize}[leftmargin=2em]
+\item If $\fp{\xstar} < 0$, then $\xstar$ is \textbf{linearly stable}.
+\item If $\fp{\xstar} > 0$, then $\xstar$ is \textbf{unstable}.
+\item If $\fp{\xstar} = 0$, the test is \textbf{inconclusive}---higher-order
+      terms must be examined.
+\end{itemize}
+\end{keyresult}
+
+\begin{example}[Population Growth]
+Consider $\xdot = rx(1-x/K)$ (the logistic equation) with $r,K>0$.
+The fixed points are $\xstar=0$ and $\xstar=K$.
+Since $f'(x) = r - 2rx/K$, we have $f'(0)=r>0$ (unstable) and
+$f'(K)=-r<0$ (stable).  The carrying capacity $K$ is the stable
+equilibrium.
+\end{example}
+
+\subsection{Existence and Uniqueness}\label{sec:existence-uniqueness}
+
+\begin{theorem}[Existence and Uniqueness]\label{thm:exist-unique}
+Consider the initial value problem $\xdot = f(x)$, $x(0)=x_0$.
+If $f(x)$ is continuous and $f'(x)$ is also continuous (i.e.,
+$f\in C^1$) on an open interval containing $x_0$, then a solution $x(t)$
+exists and is unique on some time interval $(-\tau,\tau)$ about $t=0$.
+\end{theorem}
+
+\begin{remark}
+A key consequence is that trajectories on the real line \emph{cannot cross}
+fixed points.  This means the qualitative behavior is completely determined
+by the signs of $f(x)$ between consecutive fixed points.
+\end{remark}
+
+\subsection{Impossibility of Oscillations}
+
+\begin{theorem}
+For a first-order autonomous ODE $\xdot=f(x)$ on the real line with $f\in C^1$, oscillations (periodic solutions) are impossible.
+\end{theorem}
+\begin{proof}
+The velocity $f(x)$ at any point $x$ is single-valued and time-independent.  For the system to oscillate, $x$ would have to return to a previously visited value, requiring $\xdot$ to change sign while passing through the same point---but $f(x)$ is fixed at each $x$.  More precisely, by the uniqueness theorem, trajectories cannot cross, and on $\R^1$ there is no way to return to a starting point without crossing a fixed point, at which the solution would be trapped forever.
+\end{proof}
+
+\subsection{Potentials}
+
+For one-dimensional flows, we can often think of the dynamics in terms of a ``particle rolling downhill on a potential landscape.''
+
+\begin{definition}[Potential Function]
+Given $\xdot = f(x)$, define the \textbf{potential} $V(x)$ by
+\begin{equation}
+  f(x) = -\dv{V}{x}, \qquad\text{i.e.}\qquad V(x) = -\int f(x)\,dx.
+\end{equation}
+\end{definition}
+
+Then $\xdot = -V'(x)$: the system always moves in the direction of
+decreasing $V$.  Stable fixed points correspond to local \emph{minima} of
+$V$; unstable fixed points correspond to local \emph{maxima}.
+
+The potential decreases monotonically along trajectories:
+\[
+  \dv{V}{t} = V'(x)\,\xdot = V'(x)\bigl[-V'(x)\bigr]
+  = -\bigl[V'(x)\bigr]^2 \le 0.
+\]
+
+\subsection{Solving Equations on the Computer: Euler's Method}
+
+In practice, many nonlinear ODEs cannot be solved in closed form.
+The simplest numerical scheme for $\xdot = f(x)$ is \textbf{Euler's method}:
+\begin{equation}
+  x_{n+1} = x_n + f(x_n)\,\Delta t,
+\end{equation}
+which approximates the solution by taking small steps of size $\Delta t$
+along the tangent line.  More sophisticated methods (Runge--Kutta, adaptive
+step-size) are used in practice, but Euler's method captures the essential
+idea.
+
+\begin{example}[Separation of Variables and Finite-Time Blowup]
+Consider $\xdot = 1 + x^2$ with $x(0)=0$.  By separation of variables:
+\[
+  \int\frac{dx}{1+x^2} = \int dt
+  \quad\Longrightarrow\quad \arctan(x) = t + C.
+\]
+With $x(0)=0$: $C=0$, so $x(t) = \tan(t)$.  The solution blows up in
+finite time $t = \pi/2$.
+
+This illustrates an important caveat: the existence and uniqueness theorem
+guarantees solutions only \emph{locally} in time.  If $f$ grows fast enough,
+the solution can escape to infinity in finite time.  However, for flows on
+the \emph{line} where $f$ is smooth and bounded, this cannot happen.
+\end{example}
+
+\begin{example}[Exact Solution: $\xdot = x^2 - 1$]
+Fixed points: $\xstar = \pm 1$.  Since $f'(x)=2x$, $f'(-1)=-2<0$ (stable)
+and $f'(1)=2>0$ (unstable).  By partial fractions:
+\[
+  \int\frac{dx}{x^2-1} = \int\frac{dx}{(x-1)(x+1)}
+  = \frac{1}{2}\int\left(\frac{1}{x-1} - \frac{1}{x+1}\right)dx = t + C.
+\]
+Solving gives $x(t) = -\tanh(t-t_0)$ for trajectories between the fixed
+points, confirming the graphical analysis.
+\end{example}
+
+
+% ──────────────────────────────────────────────
+\section{Bifurcations}\label{sec:bifurcations}
+% ──────────────────────────────────────────────
+
+\subsection{Introduction}
+
+A \textbf{bifurcation} occurs when a small, smooth change in a parameter
+causes a qualitative (topological) change in the dynamics---for instance,
+fixed points may be created, destroyed, or change stability.
+
+The parameter is traditionally denoted $r$.  The key question is:
+\emph{How does the phase portrait of $\xdot = f(x;r)$ change as $r$ varies?}
+
+A \textbf{bifurcation diagram} plots a characteristic feature of the
+solution (usually the fixed point values $\xstar$) on the vertical axis
+versus the parameter $r$ on the horizontal axis.  Solid curves denote
+stable fixed points; dashed curves denote unstable ones.
+
+\subsection{Saddle-Node Bifurcation}\label{sec:saddle-node}
+
+The \textbf{saddle-node bifurcation} is the basic mechanism by which fixed
+points are created and destroyed.
+
+\begin{keyresult}[Normal Form: Saddle-Node Bifurcation]
+\begin{equation}\label{eq:sn-normal}
+  \xdot = r + x^2.
+\end{equation}
+\end{keyresult}
+
+\noindent\textbf{Analysis.}
+\begin{itemize}[leftmargin=2em]
+\item For $r<0$: two fixed points at $\xstar = \pm\sqrt{-r}$.
+      Since $f'(x)=2x$, the negative root is stable ($f'<0$) and the
+      positive root is unstable ($f'>0$).
+\item At $r=0$: the two fixed points coalesce into one \emph{half-stable}
+      fixed point at $\xstar=0$.
+\item For $r>0$: no fixed points exist---$f(x)>0$ everywhere so $x$
+      increases without bound.
+\end{itemize}
+
+The bifurcation occurs at $r_c = 0$.  Graphically, the two branches of the
+bifurcation diagram meet in a cusp.
+
+\begin{physicalnote}[Bottleneck / Ghost Effect]
+Just above the bifurcation ($r = 0^+$), even though no fixed point exists,
+the system slows dramatically near $x=0$ because $f(x)\approx r$ is small.
+The time to pass through this ``bottleneck'' scales as
+$T_{\text{bottleneck}} \sim \pi/\sqrt{r}$ for $r\to 0^+$.
+This is sometimes called the \emph{ghost} of the vanished fixed point.
+\end{physicalnote}
+
+\subsection{Transcritical Bifurcation}\label{sec:transcritical}
+
+In many physical situations, a fixed point exists for all parameter values
+but exchanges stability with another fixed point.
+
+\begin{keyresult}[Normal Form: Transcritical Bifurcation]
+\begin{equation}\label{eq:tc-normal}
+  \xdot = rx - x^2 = x(r-x).
+\end{equation}
+\end{keyresult}
+
+\noindent\textbf{Analysis.}  Fixed points: $\xstar = 0$ and $\xstar = r$.
+Since $f'(x) = r - 2x$:
+\begin{itemize}[leftmargin=2em]
+\item $f'(0) = r$: origin is stable for $r<0$, unstable for $r>0$.
+\item $f'(r) = -r$: the fixed point $\xstar=r$ is unstable for $r<0$,
+      stable for $r>0$.
+\end{itemize}
+
+At $r=0$ the two fixed points collide and \textbf{exchange stability}.
+Neither fixed point is destroyed; they simply swap roles.
+
+\begin{physicalnote}[Laser Threshold]
+A laser below threshold ($r<0$) has zero output (stable $\xstar=0$).
+Above threshold ($r>0$), $\xstar=0$ becomes unstable and a new stable
+state $\xstar=r$ (proportional to the laser output intensity) takes over.
+This is a transcritical bifurcation.
+\end{physicalnote}
+
+\subsection{Pitchfork Bifurcation}\label{sec:pitchfork}
+
+Pitchfork bifurcations arise in systems that possess a \textbf{symmetry}
+$x\to -x$.  There are two types.
+
+\subsubsection{Supercritical Pitchfork}
+
+\begin{keyresult}[Normal Form: Supercritical Pitchfork]
+\begin{equation}\label{eq:pf-super}
+  \xdot = rx - x^3.
+\end{equation}
+\end{keyresult}
+
+\noindent\textbf{Analysis.}  Fixed points: $\xstar = 0$ for all $r$, and
+$\xstar = \pm\sqrt{r}$ for $r>0$.
+
+Since $f'(x) = r - 3x^2$:
+\begin{itemize}[leftmargin=2em]
+\item $f'(0) = r$: origin is stable for $r<0$, unstable for $r>0$.
+\item $f'(\pm\sqrt{r}) = r - 3r = -2r < 0$ for $r>0$: the two new
+      branches are stable.
+\end{itemize}
+
+At $r=0$, the origin loses stability and two new stable branches are born
+symmetrically.  The bifurcation diagram looks like a ``pitchfork.''
+
+\subsubsection{Subcritical Pitchfork}
+
+\begin{keyresult}[Normal Form: Subcritical Pitchfork]
+\begin{equation}\label{eq:pf-sub}
+  \xdot = rx + x^3.
+\end{equation}
+\end{keyresult}
+
+Here the cubic term is \emph{destabilizing}.  For $r<0$, there are three
+fixed points: the origin (stable) and $\xstar = \pm\sqrt{-r}$ (both unstable).  At $r=0$ the unstable branches merge with the origin, making it
+unstable for $r>0$.
+
+\begin{warningbox}[Subcritical Pitchfork and Hysteresis]
+In a physical system, the subcritical pitchfork is often ``stabilized'' by
+a higher-order term, e.g., $\xdot = rx + x^3 - x^5$.  This leads to
+\textbf{hysteresis}: the system can jump discontinuously between branches as
+$r$ is varied, and the value of $x$ observed depends on the
+\emph{direction} in which $r$ is changed.
+\end{warningbox}
+
+\subsection{Imperfect Bifurcations and Catastrophes}
+
+When the symmetry of a pitchfork bifurcation is slightly broken (an
+``imperfection'' $h$), the bifurcation diagram deforms.  The normal form is
+\begin{equation}
+  \xdot = h + rx - x^3.
+\end{equation}
+For $h\neq 0$, the perfect pitchfork breaks into an isolated branch and an
+$S$-shaped curve.  The set of bifurcation points in the $(r,h)$ parameter
+plane forms a cusp---this is the \textbf{cusp catastrophe}, one of the
+elementary catastrophes of singularity theory.
+
+\subsection{Summary of 1D Bifurcations}
+
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Bifurcation} & \textbf{Normal Form} & \textbf{Mechanism} \\
+\midrule
+Saddle-node     & $\xdot = r + x^2$       & Two FPs created/destroyed \\
+Transcritical   & $\xdot = rx - x^2$      & FPs exchange stability \\
+Supercrit.\ pitchfork & $\xdot = rx - x^3$ & One FP $\to$ three; stable branches \\
+Subcrit.\ pitchfork   & $\xdot = rx + x^3$ & Three FPs $\to$ one; unstable branches \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Application: Overdamped Bead on a Rotating Hoop}\label{sec:bead-hoop}
+
+A bead slides without friction on a circular wire hoop of radius $R$ that
+rotates about its vertical diameter with angular velocity $\omega$.  In the
+overdamped limit (viscous damping dominates inertia), the angle $\phi$ of
+the bead from the bottom of the hoop obeys:
+\begin{equation}
+  \dot{\phi} = f(\phi) = \sin\phi\bigl(\gamma\cos\phi - 1\bigr),
+\end{equation}
+where $\gamma = R\omega^2/g$ is the dimensionless rotation rate.
+
+\textbf{Analysis:}
+\begin{itemize}[leftmargin=2em]
+\item Fixed points: $\phi^* = 0,\,\pi$ always exist.  For $\gamma > 1$,
+      two additional fixed points appear at $\phi^* = \pm\arccos(1/\gamma)$.
+\item At $\gamma = 1$: a \textbf{supercritical pitchfork bifurcation}
+      occurs.  The bottom ($\phi=0$) changes from stable to unstable,
+      and the bead spontaneously climbs to one of the new off-axis
+      equilibria.
+\end{itemize}
+
+This is a beautiful physical realization of symmetry-breaking: for slow
+rotation the bead sits at the bottom; for fast rotation it ``chooses'' a
+side, breaking the left-right symmetry.
+
+\subsection{Application: Insect Outbreak (Spruce Budworm)}
+
+The budworm population $N$ satisfies a model of the form
+\begin{equation}
+  \dot{N} = rN\!\left(1 - \frac{N}{K}\right) - p(N),
+\end{equation}
+where the first term is logistic growth and $p(N) = BN^2/(A^2+N^2)$ is
+predation (a sigmoidal functional response).  Nondimensionalizing
+with $x = N/A$, $\tau = rAt$, etc., leads to
+\begin{equation}
+  \dot{x} = rx\!\left(1 - \frac{x}{k}\right) - \frac{x^2}{1+x^2}.
+\end{equation}
+
+For appropriate parameter ranges, this system exhibits \textbf{hysteresis}
+via saddle-node bifurcations.  As parameters change slowly (e.g., the
+forest matures, increasing $k$), the budworm population can undergo a
+sudden catastrophic outbreak (a jump to a high-$x$ branch), followed by
+an equally sudden crash when the branch disappears.  This involves two
+saddle-node bifurcations forming a hysteresis loop---an example of a
+\textbf{cusp catastrophe} in an ecological setting.
+
+
+% ──────────────────────────────────────────────
+\section{Flows on the Circle}\label{sec:flows-circle}
+% ──────────────────────────────────────────────
+
+\subsection{Motivation and Definitions}
+
+On the real line, oscillations are impossible for a first-order autonomous
+system.  However, if the phase space is a \textbf{circle} $S^1$
+(i.e., the variable $\theta$ is $2\pi$-periodic), oscillations \emph{are}
+possible: the system can flow around the circle indefinitely.
+
+\begin{definition}
+A \textbf{flow on the circle} is an ODE of the form
+\begin{equation}
+  \thetadot = f(\theta), \qquad \theta \in [0, 2\pi),
+\end{equation}
+where $f(\theta+2\pi) = f(\theta)$.
+\end{definition}
+
+Fixed points are again defined by $f(\theta^*)=0$, and stability analysis is
+identical to the real-line case.
+
+\subsection{Uniform and Nonuniform Oscillators}
+
+\textbf{Uniform oscillator:} $\thetadot = \omega$ (constant angular
+velocity).  Period $T = 2\pi/\omega$.
+
+\textbf{Nonuniform oscillator:} $\thetadot = \omega - a\sin\theta$
+with $a,\omega > 0$.
+\begin{itemize}[leftmargin=2em]
+\item If $\omega > a$: $\thetadot > 0$ always, so $\theta$ oscillates but
+      nonuniformly.  The period is
+      \begin{equation}\label{eq:nonuniform-period}
+        T = \frac{2\pi}{\sqrt{\omega^2 - a^2}}.
+      \end{equation}
+\item At $\omega = a$: a saddle-node bifurcation creates a half-stable
+      fixed point.  The period diverges: $T\to\infty$.
+\item For $\omega < a$: two fixed points appear (one stable, one unstable)
+      and oscillation ceases.
+\end{itemize}
+
+This is the prototypical example of a \textbf{saddle-node bifurcation on a
+circle}, also called a SNIPER (Saddle-Node Infinite-PERiod) bifurcation.
+The divergence of the period scales as $T \sim 1/\sqrt{\omega-a}$ near the
+bifurcation.
+
+\subsection{The Overdamped Pendulum}
+
+A pendulum in a viscous fluid with a constant applied torque $\Gamma$ is
+modeled by
+\begin{equation}
+  \thetadot = \Gamma - \sin\theta.
+\end{equation}
+This is exactly the nonuniform oscillator with $\omega = \Gamma$ and $a=1$.
+For $|\Gamma|<1$, the pendulum settles to a tilted equilibrium; for
+$|\Gamma|>1$, it whirls continuously.
+
+\subsection{Superconducting Josephson Junctions}\label{sec:josephson-1d}
+
+A Josephson junction consists of two superconductors separated by a thin
+insulating barrier.  The \emph{phase difference} $\phi$ across the junction
+obeys (in the overdamped, zero-capacitance limit):
+\begin{equation}\label{eq:JJ-1D}
+  \frac{\hbar}{2eR}\,\dot{\phi} = I - I_c \sin\phi,
+\end{equation}
+where $I$ is the applied (DC) current, $I_c$ is the critical current, and
+$R$ is the shunt resistance.  Nondimensionalizing:
+\begin{equation}
+  \dot{\phi} = i - \sin\phi, \qquad i \equiv I/I_c.
+\end{equation}
+This is a flow on the circle identical to the overdamped pendulum.
+\begin{itemize}[leftmargin=2em]
+\item For $|i|<1$: two fixed points exist; $\dot{\phi}=0$ at steady state
+      and the voltage $V = (\hbar/2e)\,\dot{\phi} = 0$.  The junction
+      carries a \textbf{supercurrent} with zero resistance.
+\item For $|i|>1$: no fixed points; $\phi$ winds continuously and a
+      nonzero DC voltage appears across the junction.
+\end{itemize}
+
+% ══════════════════════════════════════════════
+\part{Two-Dimensional Flows}
+% ══════════════════════════════════════════════
+
+% ──────────────────────────────────────────────
+\section{Linear Systems in Two Dimensions}\label{sec:linear-2d}
+% ──────────────────────────────────────────────
+
+\subsection{Setup}
+
+We now consider systems of two coupled first-order ODEs:
+\begin{equation}\label{eq:2d-linear}
+  \dot{\vec{x}} = A\vec{x}, \qquad
+  A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}, \qquad
+  \vec{x} = \begin{pmatrix} x \\ y \end{pmatrix}.
+\end{equation}
+
+\subsection{Solution by Eigenvalues and Eigenvectors}
+
+We seek solutions of the form $\vec{x}(t) = e^{\lambda t}\vec{v}$.
+Substituting into~\eqref{eq:2d-linear}:
+\[
+  \lambda e^{\lambda t}\vec{v} = A\, e^{\lambda t}\vec{v}
+  \quad\Longrightarrow\quad A\vec{v} = \lambda\vec{v}.
+\]
+Thus $\lambda$ must be an \textbf{eigenvalue} of $A$ and $\vec{v}$ the
+corresponding \textbf{eigenvector}.
+
+The eigenvalues satisfy the characteristic equation:
+\begin{equation}\label{eq:char-eq}
+  \lambda^2 - \tau\lambda + \Delta = 0,
+\end{equation}
+where $\tau \equiv \tr A = a+d$ and $\Delta \equiv \det A = ad-bc$.
+The solutions are:
+\begin{equation}\label{eq:eigenvalues}
+  \lambda_{1,2} = \frac{\tau \pm \sqrt{\tau^2 - 4\Delta}}{2}.
+\end{equation}
+
+The general solution is $\vec{x}(t) = c_1 e^{\lambda_1 t}\vec{v}_1
++ c_2 e^{\lambda_2 t}\vec{v}_2$ (when the eigenvalues are distinct).
+
+\subsection{Classification of Fixed Points}\label{sec:classification}
+
+The qualitative behavior of trajectories near the origin depends on the
+eigenvalues, which are determined by $\tau$ and $\Delta$.
+
+\begin{keyresult}[Classification in the $(\tau,\Delta)$ Plane]
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Region} & \textbf{Eigenvalues} & \textbf{Fixed Point Type} \\
+\midrule
+$\Delta < 0$ & Real, opposite signs & \textbf{Saddle point} \\
+$\Delta > 0$, $\tau^2 > 4\Delta$, $\tau < 0$ & Real, both negative
+  & \textbf{Stable node} \\
+$\Delta > 0$, $\tau^2 > 4\Delta$, $\tau > 0$ & Real, both positive
+  & \textbf{Unstable node} \\
+$\Delta > 0$, $\tau^2 < 4\Delta$, $\tau < 0$ & Complex, $\text{Re}<0$
+  & \textbf{Stable spiral} \\
+$\Delta > 0$, $\tau^2 < 4\Delta$, $\tau > 0$ & Complex, $\text{Re}>0$
+  & \textbf{Unstable spiral} \\
+$\Delta > 0$, $\tau = 0$ & Pure imaginary
+  & \textbf{Center} (linear) \\
+$\Delta > 0$, $\tau^2 = 4\Delta$ & Real, repeated
+  & \textbf{Star node} or \textbf{degenerate node} \\
+$\Delta = 0$ & One eigenvalue zero
+  & \textbf{Line of fixed points} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{keyresult}
+
+\noindent\textbf{Key relationships:}
+\begin{align}
+  \lambda_1 + \lambda_2 &= \tau = \tr A, \\
+  \lambda_1 \cdot \lambda_2 &= \Delta = \det A.
+\end{align}
+The stability boundary is $\tau = 0$ (eigenvalues cross the imaginary axis).
+The boundary between nodes and spirals is $\tau^2 = 4\Delta$.
+Saddle points live below the $\Delta = 0$ axis.
+
+\begin{physicalnote}[Physical Interpretation]
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Stable node:} trajectories approach the origin along
+      straight lines (the eigenvector directions); overdamped approach.
+\item \textbf{Stable spiral:} trajectories spiral inward; underdamped
+      oscillatory decay.
+\item \textbf{Center:} closed elliptical orbits; no damping, no growth.
+\item \textbf{Saddle:} trajectories approach along one eigenvector
+      direction and are repelled along the other.
+\end{itemize}
+\end{physicalnote}
+
+
+% ──────────────────────────────────────────────
+\section{Phase Plane Analysis}\label{sec:phase-plane}
+% ──────────────────────────────────────────────
+
+\subsection{Nonlinear Systems and Phase Portraits}
+
+We now consider the general two-dimensional nonlinear system:
+\begin{equation}\label{eq:2d-nonlinear}
+  \dot{x} = f(x,y), \qquad \dot{y} = g(x,y).
+\end{equation}
+The \textbf{phase portrait} is the collection of all trajectories in the
+$(x,y)$ plane.
+
+\begin{definition}[Nullclines]
+The \textbf{$x$-nullcline} is the set of points where $\dot{x}=0$, i.e.,
+$f(x,y)=0$.  The \textbf{$y$-nullcline} is the set where $\dot{y}=0$, i.e.,
+$g(x,y)=0$.  Fixed points lie at the \emph{intersections} of the two
+nullclines.
+\end{definition}
+
+Nullclines are extremely useful for sketching phase portraits:
+on the $x$-nullcline, the flow is purely vertical ($\dot{x}=0$); on the
+$y$-nullcline, the flow is purely horizontal ($\dot{y}=0$).
+
+\subsection{Existence, Uniqueness, and Topological Consequences}
+
+\begin{theorem}[Existence and Uniqueness in 2D]
+If $f$ and $g$ are continuously differentiable, then given any initial
+condition $(x_0,y_0)$, a unique solution exists (at least locally in time).
+\end{theorem}
+
+\begin{corollary}
+Different trajectories can never cross in the phase plane.
+\end{corollary}
+
+This has profound consequences: for example, a closed orbit divides the plane
+into an ``inside'' and an ``outside,'' and no trajectory can cross it.
+
+\subsection{Linearization Near Fixed Points}\label{sec:linearization}
+
+Let $(\xstar, y^*)$ be a fixed point of~\eqref{eq:2d-nonlinear}.  Set
+$u = x - \xstar$, $v = y - y^*$.  Taylor expanding:
+\begin{equation}
+  \begin{pmatrix} \dot{u} \\ \dot{v} \end{pmatrix}
+  = J\bigg|_{(\xstar,y^*)} \begin{pmatrix} u \\ v \end{pmatrix}
+  + \text{h.o.t.},
+\end{equation}
+where $J$ is the \textbf{Jacobian matrix}:
+\begin{equation}\label{eq:jacobian}
+  J = \begin{pmatrix}
+    \pdv{f}{x} & \pdv{f}{y} \\[4pt]
+    \pdv{g}{x} & \pdv{g}{y}
+  \end{pmatrix}\bigg|_{(\xstar,y^*)}.
+\end{equation}
+
+\begin{theorem}[Hartman--Grobman Theorem---Informal]\label{thm:hartman-grobman}
+If the fixed point is \textbf{hyperbolic} (i.e., $\text{Re}(\lambda_i)\neq 0$
+for all eigenvalues of $J$), then the phase portrait of the nonlinear system
+near the fixed point is \emph{qualitatively the same} as the phase portrait
+of the linearized system $\dot{\vec{u}} = J\vec{u}$.
+\end{theorem}
+
+\begin{warningbox}[Borderline Cases]
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Centers} ($\tau=0$, $\Delta>0$) are \emph{not} hyperbolic.
+      A linear center may become a spiral (stable or unstable) in the
+      nonlinear system.  Additional analysis (e.g., conserved quantities,
+      reversibility) is needed.
+\item \textbf{Non-isolated fixed points} ($\Delta=0$) also require
+      special treatment.
+\end{itemize}
+\end{warningbox}
+
+\subsection{Application: Competing Species (Rabbits vs.\ Sheep)}
+
+Consider the Lotka--Volterra competition model:
+\begin{equation}
+  \dot{x} = x(3-x-2y), \qquad \dot{y} = y(2-x-y),
+\end{equation}
+where $x$ and $y$ represent two competing populations.
+
+\textbf{Nullclines:}
+$\dot{x}=0$: $x=0$ or $x+2y=3$.  $\dot{y}=0$: $y=0$ or $x+y=2$.
+
+\textbf{Fixed points:} $(0,0)$, $(3,0)$, $(0,2)$, and the intersection of
+$x+2y=3$ and $x+y=2$, giving $(1,1)$.
+
+Linearizing at each fixed point using the Jacobian:
+\begin{itemize}[leftmargin=2em]
+\item $(0,0)$: $J = \bigl(\begin{smallmatrix} 3&0\\0&2\end{smallmatrix}\bigr)$,
+      eigenvalues $3,2 > 0$: unstable node.
+\item $(3,0)$: $J = \bigl(\begin{smallmatrix} -3&-6\\0&-1\end{smallmatrix}\bigr)$,
+      eigenvalues $-3,-1$: stable node (sheep extinct).
+\item $(0,2)$: $J = \bigl(\begin{smallmatrix} -1&0\\-2&-2\end{smallmatrix}\bigr)$,
+      eigenvalues $-1,-2$: stable node (rabbits extinct).
+\item $(1,1)$: $\tau = -3$, $\Delta = 1$, $\tau^2-4\Delta = 5 > 0$:
+      a saddle point (coexistence equilibrium is unstable).
+\end{itemize}
+
+The separatrix of the saddle at $(1,1)$ divides the first quadrant into two
+basins of attraction: one leading to $(3,0)$ (species $x$ wins) and the
+other to $(0,2)$ (species $y$ wins).  The outcome depends on initial conditions---\textbf{competitive exclusion}.
+
+\subsection{Conservative Systems}\label{sec:conservative}
+
+\begin{definition}[Conservative System]
+A system $\dot{x}=f(x,y)$, $\dot{y}=g(x,y)$ is \textbf{conservative} if
+there exists a function $E(x,y)$ (the \emph{energy} or \emph{conserved
+quantity}) such that $E$ is constant along trajectories:
+$\dv{E}{t} = 0$.
+\end{definition}
+
+\begin{theorem}
+Conservative systems have \textbf{no attractors}.  Trajectories lie on
+level sets of $E$, and there can be no stable nodes, stable spirals, or
+stable limit cycles.
+\end{theorem}
+\begin{proof}
+Since $E$ is constant along trajectories, no trajectory can approach a
+single point (which would require $E$ to take a single value over an open
+neighborhood), nor can a trajectory spiral inward (which would require $E$ to
+decrease monotonically).
+\end{proof}
+
+\begin{example}[Harmonic Oscillator]
+$m\ddot{x} = -kx$ can be written as
+$\dot{x} = v$, $\dot{v} = -(k/m)\,x$.  The energy
+$E = \tfrac{1}{2}kx^2 + \tfrac{1}{2}mv^2$
+is conserved:
+\[
+  \dv{E}{t} = kx\dot{x} + mv\dot{v} = kxv + mv\bigl(-\tfrac{k}{m}x\bigr) = 0.
+\]
+The Jacobian at the origin has $\tau=0$, $\Delta=k/m>0$: a linear center.
+Since the system is conservative, this center persists as a true nonlinear
+center with closed elliptical orbits.
+\end{example}
+
+\subsection{Reversible Systems}\label{sec:reversible}
+
+\begin{definition}[Time-Reversibility]
+A system is \textbf{reversible} if it is invariant under the transformation
+$t\to -t$ and some transformation of the state variables (typically
+$y\to -y$, or equivalently, the velocity reverses).
+\end{definition}
+
+\begin{theorem}
+For a reversible system, if a trajectory lies on the line of symmetry (the
+axis that is invariant under the reversal), then any linear center is a
+\emph{true} nonlinear center.
+\end{theorem}
+
+\begin{example}[Undamped Pendulum]
+The equation $\ddot{\theta} = -\sin\theta$ written as a system:
+$\dot{\theta} = v$, $\dot{v} = -\sin\theta$.
+Under $t\to -t$, $v\to -v$: the equations are unchanged.  Therefore the
+linear center at $(\theta,v)=(0,0)$ is a true nonlinear center.
+
+The energy is $E = \tfrac{1}{2}v^2 - \cos\theta$.  Phase portrait:
+\begin{itemize}[leftmargin=2em]
+\item $E < 1$: librations (closed orbits around the center).
+\item $E = 1$: the \textbf{separatrix} (homoclinic orbits connecting the
+      saddle at $(\pi,0)$ to itself).
+\item $E > 1$: rotations (unbounded trajectories wrapping around).
+\end{itemize}
+\end{example}
+
+\subsection{Index Theory}\label{sec:index-theory}
+
+Index theory provides topological constraints on the arrangement of fixed
+points and closed orbits.
+
+\begin{definition}[Index of a Closed Curve]
+Let $C$ be a simple closed curve in the phase plane that does not pass
+through any fixed points.  At each point on $C$, the vector field
+$(\dot{x},\dot{y})$ makes an angle $\phi$ with the positive $x$-axis.
+As we traverse $C$ counterclockwise, $\phi$ changes continuously.  The
+\textbf{index} of $C$ is
+\begin{equation}
+  I_C = \frac{1}{2\pi}\oint_C d\phi = \frac{[\phi]_C}{2\pi},
+\end{equation}
+i.e., the number of complete counterclockwise revolutions of the vector
+field as we traverse $C$ once counterclockwise.
+\end{definition}
+
+\begin{theorem}[Properties of the Index]
+\begin{enumerate}[leftmargin=2em]
+\item If $C$ encloses no fixed points, then $I_C = 0$.
+\item If $C$ is a trajectory (e.g., a closed orbit), then $I_C = +1$.
+\item The index is unchanged if $C$ is continuously deformed, as long as
+      it does not cross a fixed point.
+\item The index of a curve enclosing multiple isolated fixed points equals
+      the sum of the indices of the individual fixed points.
+\item Reversing time ($t\to -t$) does not change the index.
+\end{enumerate}
+\end{theorem}
+
+\begin{keyresult}[Indices of Common Fixed Points]
+\begin{center}
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Fixed Point Type} & \textbf{Index} \\
+\midrule
+Stable/unstable node    & $+1$ \\
+Stable/unstable spiral  & $+1$ \\
+Center                  & $+1$ \\
+Saddle point            & $-1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{keyresult}
+
+\begin{corollary}
+Any closed orbit must enclose fixed points whose indices sum to $+1$.
+In particular, a closed orbit must enclose at least one fixed point that
+is not a saddle.
+\end{corollary}
+
+
+% ──────────────────────────────────────────────
+\section{Limit Cycles}\label{sec:limit-cycles}
+% ──────────────────────────────────────────────
+
+\subsection{Definitions and Examples}
+
+\begin{definition}[Limit Cycle]
+A \textbf{limit cycle} is an isolated closed orbit.  ``Isolated'' means
+that neighboring trajectories are not closed---they either spiral toward or
+away from the limit cycle.
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Stable} limit cycle: all nearby trajectories approach it as
+      $t\to\infty$.
+\item \textbf{Unstable} limit cycle: all nearby trajectories move away.
+\item \textbf{Half-stable}: trajectories approach from one side and recede
+      from the other.
+\end{itemize}
+\end{definition}
+
+\begin{remark}
+Limit cycles are inherently \textbf{nonlinear} phenomena.  They cannot
+occur in linear systems (where closed orbits, if they exist, form
+continuous families---centers---not isolated cycles).
+\end{remark}
+
+\begin{example}[Limit Cycle in Polar Coordinates]
+Consider $\dot{r} = r(1-r^2)$, $\dot{\theta} = 1$.
+The radial equation has fixed points $r^*=0$ (unstable, since
+$f'(0)=1>0$) and $r^*=1$ (stable, since $f'(1)=-2<0$).  Therefore
+$r=1$ is a \textbf{stable limit cycle}: all trajectories with $r>0$
+spiral toward the unit circle.
+\end{example}
+
+\subsection{Ruling Out Closed Orbits}
+
+Before searching for limit cycles, it is often useful to rule them out in
+certain regions.
+
+\subsubsection{Gradient Systems}
+
+If $\dot{x} = -\nabla V$ for some potential $V(x,y)$, then
+\[
+  \dv{V}{t} = \nabla V \cdot \dot{\vec{x}}
+  = \nabla V \cdot (-\nabla V) = -|\nabla V|^2 \le 0.
+\]
+So $V$ decreases monotonically along trajectories, and closed orbits are
+impossible.
+
+\subsubsection{Liapunov Functions}
+
+\begin{theorem}[Liapunov's Theorem for Ruling Out Closed Orbits]
+If there exists a function $V(x,y)$ satisfying:
+\begin{enumerate}[leftmargin=2em]
+\item $V(\xstar,y^*)=0$ at all fixed points,
+\item $V(x,y)>0$ for all $(x,y)$ not a fixed point (in some region $R$),
+\item $\dot{V} = \dv{V}{t} < 0$ for all non-fixed points in $R$,
+\end{enumerate}
+then there are no closed orbits entirely contained in $R$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+On a closed orbit, $V$ would have to return to its starting value after one
+period.  But $\dot{V}<0$ means $V$ is strictly decreasing, a contradiction.
+\end{proof}
+
+\subsubsection{Dulac's Criterion}
+
+\begin{theorem}[Dulac's Criterion]\label{thm:dulac}
+Let $R$ be a simply connected region of the plane.  If there exists a
+continuously differentiable function $g(x,y)$ such that
+$\nabla\cdot(g\vec{F})$ does not change sign in $R$ (and is not
+identically zero on any open subset), then there are no closed orbits
+entirely contained in $R$.
+
+Here $\vec{F} = (f, g_{\text{sys}})$ is the vector field, and we require
+\begin{equation}
+  \pdv{(g\,f)}{x} + \pdv{(g\,g_{\text{sys}})}{y} \neq 0
+  \quad\text{(same sign throughout $R$)}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+By Green's theorem, for any closed curve $C$ bounding a region $A\subset R$:
+\[
+  \iint_A \nabla\cdot(g\vec{F})\,dA = \oint_C g\vec{F}\cdot\hat{n}\,dl.
+\]
+If $C$ were a closed orbit, then $\vec{F}$ is tangent to $C$ everywhere, so
+$\vec{F}\cdot\hat{n}=0$ and the right side vanishes.  But the left side is
+nonzero by hypothesis, a contradiction.
+\end{proof}
+
+\subsection{Poincar\'e--Bendixson Theorem}
+
+This theorem is one of the most powerful tools for \emph{proving the
+existence} of limit cycles.
+
+\begin{theorem}[Poincar\'e--Bendixson Theorem]\label{thm:PB}
+Suppose that:
+\begin{enumerate}[leftmargin=2em]
+\item $R$ is a closed, bounded region of the plane;
+\item $\dot{\vec{x}} = \vec{F}(\vec{x})$ is a continuously differentiable
+      vector field on an open set containing $R$;
+\item $R$ does not contain any fixed points;
+\item There exists a trajectory $C$ that is ``confined'' to $R$
+      (i.e., $C$ starts in $R$ and can never leave).
+\end{enumerate}
+Then $C$ is either a closed orbit, or it spirals toward a closed orbit
+contained in $R$.  In either case, $R$ contains a \textbf{closed orbit}.
+\end{theorem}
+
+\begin{remark}
+This theorem is specific to two dimensions.  In three or more dimensions,
+a bounded trajectory need not approach a closed orbit (it could be a
+strange attractor, for example).
+\end{remark}
+
+\begin{physicalnote}[Trapping Regions]
+To apply the Poincar\'e--Bendixson theorem, one constructs a
+\textbf{trapping region}: a closed, bounded region $R$ with no fixed points
+inside, such that the vector field points inward (or is tangent) on the
+entire boundary $\partial R$.  Then any trajectory entering $R$ is confined
+to it, and the theorem guarantees a closed orbit inside.
+
+The boundary of $R$ is often built from segments of nullclines, coordinate
+axes, or level curves of auxiliary functions.
+\end{physicalnote}
+
+\subsection{Li\'enard Systems}\label{sec:lienard}
+
+\begin{definition}[Li\'enard System]
+A \textbf{Li\'enard system} is a second-order ODE of the form
+\begin{equation}
+  \ddot{x} + f(x)\dot{x} + g(x) = 0,
+\end{equation}
+or equivalently, the system $\dot{x} = y - F(x)$, $\dot{y} = -g(x)$,
+where $F(x) = \int_0^x f(s)\,ds$.
+\end{definition}
+
+\begin{theorem}[Li\'enard's Theorem]
+The Li\'enard system has a unique, stable limit cycle if:
+\begin{enumerate}[leftmargin=2em]
+\item $f$ and $g$ are continuous, and $g$ is Lipschitz;
+\item $g$ is an odd function: $g(-x) = -g(x)$, with $g(x) > 0$ for $x > 0$;
+\item $F$ is an odd function with exactly one positive zero at $x = a$,
+      $F(x) < 0$ for $0 < x < a$, $F(x) > 0$ and nondecreasing for
+      $x > a$, and $F(x) \to \infty$ as $x \to \infty$.
+\end{enumerate}
+\end{theorem}
+
+\subsection{The Van der Pol Oscillator}\label{sec:vdp}
+
+The most important Li\'enard system is the \textbf{Van der Pol oscillator}:
+\begin{equation}\label{eq:vdp}
+  \ddot{x} + \mu(x^2-1)\dot{x} + x = 0, \qquad \mu > 0.
+\end{equation}
+Here $f(x) = \mu(x^2-1)$ and $g(x) = x$.  The damping is
+\emph{negative} for $|x|<1$ (energy is pumped in) and \emph{positive}
+for $|x|>1$ (energy is dissipated).  This self-regulating mechanism
+produces a unique, stable limit cycle for any $\mu > 0$.
+
+Rewriting as a system with $y = \dot{x}/\mu + x^3/3 - x$ (Li\'enard
+plane):
+\begin{equation}
+  \dot{x} = \mu\bigl(y - F(x)\bigr), \qquad \dot{y} = -\frac{x}{\mu},
+  \qquad F(x) = \frac{x^3}{3} - x.
+\end{equation}
+
+\subsection{Relaxation Oscillations}\label{sec:relaxation}
+
+For $\mu \gg 1$ (strong nonlinearity), the Van der Pol oscillator exhibits
+\textbf{relaxation oscillations}: the motion consists of slow crawls along
+the cubic nullcline $y = F(x) = x^3/3 - x$ punctuated by fast jumps
+between the two branches.
+
+\textbf{Mechanism:}
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Fast dynamics} ($\dot{x}$ is large): the trajectory jumps
+      nearly horizontally between the left and right branches of the
+      $S$-shaped nullcline.
+\item \textbf{Slow dynamics} ($\dot{y}$ is small): the trajectory crawls
+      along the nullcline until it reaches a knee (fold), then jumps again.
+\end{enumerate}
+
+The period of relaxation oscillations scales as $T \approx (3 - 2\ln 2)\mu
+\approx 1.614\,\mu$ for large $\mu$---it grows linearly with the
+nonlinearity parameter, in contrast to the nearly constant period of
+weakly nonlinear oscillations.
+
+
+% ──────────────────────────────────────────────
+\section{Bifurcations Revisited: Two-Dimensional Systems}%
+\label{sec:bif-2d}
+% ──────────────────────────────────────────────
+
+\subsection{Saddle-Node, Transcritical, and Pitchfork in 2D}
+
+In two dimensions, all three bifurcation types from Section~\ref{sec:bifurcations}
+can occur.  The mechanism is the same: one eigenvalue of the Jacobian passes
+through zero.  The other eigenvalue remains nonzero, so the dynamics in the
+``transverse'' direction is simply attracted to (or repelled from) a
+manifold on which the 1D bifurcation takes place.
+
+\subsection{Hopf Bifurcation}\label{sec:hopf}
+
+The \textbf{Hopf bifurcation} is the birth (or death) of a limit cycle from
+a fixed point.  It occurs when a pair of complex conjugate eigenvalues
+crosses the imaginary axis.
+
+\begin{theorem}[Hopf Bifurcation Theorem---Informal]
+Consider $\dot{\vec{x}} = \vec{F}(\vec{x};\mu)$ with a fixed point at
+the origin.  Suppose the Jacobian at the origin has eigenvalues
+$\lambda(\mu) = \alpha(\mu) \pm i\omega(\mu)$.  If:
+\begin{enumerate}[leftmargin=2em]
+\item At $\mu=0$: $\alpha(0) = 0$ and $\omega(0) \neq 0$ (pure imaginary
+      eigenvalues);
+\item $\alpha'(0) \neq 0$ (eigenvalues cross the imaginary axis with
+      nonzero speed);
+\end{enumerate}
+then a Hopf bifurcation occurs at $\mu=0$.
+\end{theorem}
+
+\subsubsection{Supercritical Hopf Bifurcation}
+
+A \textbf{stable limit cycle} is born from the fixed point as it loses
+stability.
+
+\begin{keyresult}[Normal Form: Supercritical Hopf]
+In polar coordinates:
+\begin{equation}\label{eq:hopf-super}
+  \dot{r} = \mu r - r^3, \qquad \dot{\theta} = \omega + b r^2.
+\end{equation}
+\begin{itemize}[leftmargin=2em]
+\item For $\mu < 0$: origin is a stable spiral.
+\item For $\mu > 0$: origin becomes unstable; a stable limit cycle appears
+      at $r = \sqrt{\mu}$.
+\end{itemize}
+The amplitude of the limit cycle grows as $\sqrt{\mu}$, and its frequency
+is $\omega + b\mu$ (the parameter $b$ shifts the frequency, while
+$\omega$ sets the base frequency).
+\end{keyresult}
+
+\subsubsection{Subcritical Hopf Bifurcation}
+
+An \textbf{unstable} limit cycle shrinks down to the origin and is absorbed
+as the origin gains stability.
+
+Normal form in polar coordinates:
+\begin{equation}
+  \dot{r} = \mu r + r^3, \qquad \dot{\theta} = \omega + b r^2.
+\end{equation}
+\begin{itemize}[leftmargin=2em]
+\item For $\mu < 0$: an unstable limit cycle at $r=\sqrt{-\mu}$ coexists
+      with a stable origin.
+\item At $\mu = 0$: the limit cycle collapses into the origin.
+\item For $\mu > 0$: the origin is unstable and no small-amplitude limit
+      cycle exists.  Trajectories may jump to a distant attractor, leading
+      to a \textbf{hard} or \textbf{catastrophic} transition.
+\end{itemize}
+
+\subsection{Global Bifurcations of Cycles}
+
+Limit cycles can also be born or destroyed through \emph{global}
+bifurcations that involve large-scale rearrangements of the phase portrait.
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Saddle-node bifurcation of cycles (fold of cycles):}
+      A stable and an unstable limit cycle collide and annihilate.
+\item \textbf{Homoclinic bifurcation:} A limit cycle grows until it
+      touches a saddle point, forming a \emph{homoclinic orbit} (a
+      trajectory that connects the saddle to itself).  As the parameter
+      passes through the bifurcation, the cycle's period diverges
+      ($T\to\infty$), and the cycle disappears.
+\item \textbf{Infinite-period (SNIPER) bifurcation:} A limit cycle passes
+      through a saddle-node on a circle.  The period diverges but the
+      amplitude remains finite.
+\end{enumerate}
+
+\subsection{Hysteresis in the Josephson Junction (2D)}\label{sec:jj-2d}
+
+With capacitance included, the Josephson junction becomes a second-order
+system:
+\begin{equation}
+  i = \sin\phi + \alpha\dot{\phi} + \ddot{\phi},
+\end{equation}
+which is equivalent to the \textbf{damped driven pendulum}:
+\begin{equation}
+  \dot{\phi} = y, \qquad \dot{y} = i - \sin\phi - \alpha y.
+\end{equation}
+The Jacobian is
+$J = \bigl(\begin{smallmatrix} 0 & 1 \\ -\cos\phi & -\alpha
+\end{smallmatrix}\bigr)$.
+
+The parameter $\alpha$ controls the damping:
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Overdamped} ($\alpha \gg 1$): reduces to the 1D model of
+      Section~\ref{sec:josephson-1d}.
+\item \textbf{Underdamped} ($\alpha < 1$): hysteresis occurs.  As $i$
+      increases past $1$, the zero-voltage state is lost; but when $i$ is
+      decreased, the system remains on the rotating (voltage) branch until
+      $i$ drops below a retrapping current $i_r < 1$.
+\end{itemize}
+
+\subsection{Coupled Oscillators and Quasiperiodicity}\label{sec:coupled-osc}
+
+Consider two oscillators with phase variables $\theta_1,\theta_2$ on the
+circle, coupled weakly:
+\begin{equation}\label{eq:coupled-osc}
+  \dot{\theta}_1 = \omega_1 + K_1 \sin(\theta_2 - \theta_1), \qquad
+  \dot{\theta}_2 = \omega_2 + K_2 \sin(\theta_1 - \theta_2).
+\end{equation}
+Defining the phase difference $\phi = \theta_1 - \theta_2$:
+\begin{equation}
+  \dot{\phi} = (\omega_1 - \omega_2) - (K_1 + K_2)\sin\phi.
+\end{equation}
+This is again a flow on the circle!
+
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Phase locking:}  If $|\omega_1 - \omega_2| < K_1 + K_2$,
+      stable fixed points exist: the oscillators lock to a constant phase
+      difference.
+\item \textbf{Phase drift:}  If $|\omega_1 - \omega_2| > K_1 + K_2$,
+      no fixed points; $\phi$ drifts and the oscillators are
+      \textbf{not synchronized}.
+\end{itemize}
+
+\subsubsection{Dynamics on the Torus}
+
+The combined phase space $(\theta_1,\theta_2)$ lives on a \textbf{torus}
+$\mathbb{T}^2 = S^1 \times S^1$.  When uncoupled ($K_1=K_2=0$), each
+oscillator moves independently, and the trajectory on the torus is either:
+\begin{itemize}[leftmargin=2em]
+\item A \textbf{closed orbit} if $\omega_1/\omega_2$ is rational, or
+\item A \textbf{quasiperiodic orbit} (densely filling the torus) if
+      $\omega_1/\omega_2$ is irrational.
+\end{itemize}
+
+\subsection{Poincar\'e Maps}\label{sec:poincare-maps}
+
+\begin{definition}[Poincar\'e Map]
+Choose a \textbf{section} $\Sigma$ (a codimension-1 surface transverse to
+the flow) in the phase space.  The \textbf{Poincar\'e map} (or first-return
+map) $P:\Sigma\to\Sigma$ sends each point $\vec{x}\in\Sigma$ to the next
+point where the trajectory through $\vec{x}$ intersects $\Sigma$.
+\end{definition}
+
+This reduces a continuous-time system to a discrete-time map, lowering the
+dimension by one.  A \textbf{closed orbit} of the flow corresponds to a
+\textbf{fixed point} of the Poincar\'e map.
+
+
+% ══════════════════════════════════════════════
+\part{Chaos}
+% ══════════════════════════════════════════════
+
+% ──────────────────────────────────────────────
+\section{The Lorenz Equations}\label{sec:lorenz}
+% ──────────────────────────────────────────────
+
+\subsection{Origin and Physical Motivation}
+
+Edward Lorenz (1963) derived a simplified model of atmospheric convection
+(Rayleigh--B\'enard convection).  The system consists of three coupled ODEs:
+\begin{equation}\label{eq:lorenz}
+\boxed{
+  \dot{x} = \sigma(y-x), \qquad
+  \dot{y} = rx - y - xz, \qquad
+  \dot{z} = xy - bz,
+}
+\end{equation}
+where $\sigma > 0$ is the Prandtl number, $r > 0$ is (proportional to) the
+Rayleigh number, and $b > 0$ is a geometric factor.  All parameters are
+positive.  The classic parameter values are $\sigma = 10$, $b = 8/3$.
+
+\subsection{Simple Properties}
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Symmetry:}  The system is invariant under
+      $(x,y,z)\to(-x,-y,z)$.
+
+\item \textbf{Dissipation:}  The divergence of the flow is
+      \[
+        \nabla\cdot\vec{F} = -\sigma - 1 - b < 0,
+      \]
+      so volumes in phase space contract exponentially.  This means the
+      system is \textbf{dissipative} and all trajectories eventually
+      become confined to an attractor of zero volume.
+
+\item \textbf{Fixed points:}
+      \begin{itemize}
+      \item The origin $O = (0,0,0)$ exists for all $r$.
+      \item For $r > 1$, two additional fixed points appear via a
+            \textbf{supercritical pitchfork} bifurcation:
+            \[
+              C^\pm = \bigl(\pm\sqrt{b(r-1)},\;\pm\sqrt{b(r-1)},\;r-1\bigr).
+            \]
+      \end{itemize}
+
+\item \textbf{Stability of the origin:}  The eigenvalues at $O$ are found
+      from the Jacobian.  The origin is stable for $r<1$ and unstable (a
+      saddle with one unstable direction) for $r>1$.
+
+\item \textbf{Stability of $C^\pm$:}  These are stable spirals for
+      $1 < r < r_H$, where
+      \begin{equation}
+        r_H = \sigma\,\frac{\sigma + b + 3}{\sigma - b - 1}
+      \end{equation}
+      (assuming $\sigma > b+1$).  At $r=r_H$, a \textbf{subcritical Hopf
+      bifurcation} occurs: $C^\pm$ lose stability and an unstable limit
+      cycle is absorbed.
+
+\item \textbf{Trapping region:}  Using the Liapunov-like function
+      $V = rx^2 + \sigma y^2 + \sigma(z-2r)^2$, one can show $\dot{V}<0$
+      outside a large ellipsoid.  Hence all trajectories eventually enter
+      this region and remain bounded.
+\end{enumerate}
+
+\subsection{Chaos on the Strange Attractor}
+
+For $r > r_H$ (and the classic parameters), trajectories exhibit
+\textbf{chaotic} behavior:
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Aperiodic:} Trajectories never repeat, even though they are
+      bounded.
+\item \textbf{Sensitive dependence on initial conditions:}  Nearby
+      trajectories diverge exponentially.  This is the hallmark of chaos.
+\item \textbf{Strange attractor:}  The attractor has a fractal structure
+      with zero volume but infinite detail.
+\end{itemize}
+
+\begin{definition}[Sensitive Dependence and Horizon Time]
+Two nearby initial conditions separated by $\delta_0$ diverge roughly as
+$\delta(t) \sim \delta_0\, e^{\lambda t}$, where $\lambda > 0$ is the
+\textbf{Lyapunov exponent}.  Predictions become unreliable when
+$\delta(t) \sim \epsilon$ (some tolerance).  The \textbf{horizon time} is:
+\begin{equation}\label{eq:horizon}
+  t_h \sim \frac{1}{\lambda}\ln\frac{\epsilon}{\delta_0}.
+\end{equation}
+Beyond $t_h$, prediction is essentially impossible despite deterministic
+dynamics.  Note the logarithmic dependence: even dramatic improvements in
+measurement precision $\delta_0$ yield only modest increases in $t_h$.
+\end{definition}
+
+\subsection{The Lorenz Map}
+
+Lorenz discovered that the chaotic dynamics can be partially understood by
+a one-dimensional map.  Record the successive local maxima $z_n$ of $z(t)$.
+Plotting $z_{n+1}$ vs.\ $z_n$ yields a remarkably thin, single-humped curve
+(approximately a tent map).
+
+Key observations:
+\begin{itemize}[leftmargin=2em]
+\item The slope $|f'| > 1$ everywhere on the Lorenz map, implying that
+      nearby orbits are stretched apart at each return.
+\item There are no stable fixed points or periodic orbits of the map,
+      explaining the aperiodic behavior.
+\item The thinness of the map (nearly 1D) arises from the extreme
+      contraction in the dissipative system.
+\end{itemize}
+
+\subsection{Exploring Parameter Space of the Lorenz System}
+
+As $r$ increases (with $\sigma=10$, $b=8/3$), the Lorenz system passes
+through several regimes:
+\begin{enumerate}[leftmargin=2em]
+\item $0 < r < 1$: The origin is the global attractor.  All motion decays.
+\item $1 < r < r_H \approx 24.74$: The fixed points $C^\pm$ are stable
+      spirals.  Transient chaos may occur for $r > 13.9$ (where a
+      ``strange saddle'' exists), but all trajectories eventually settle
+      to $C^+$ or $C^-$.
+\item $r_H < r$: Chaotic attractor (the ``butterfly'').  The system
+      exhibits sustained aperiodic motion, sensitive dependence, and a
+      fractal attractor.
+\item Periodic windows exist within the chaotic regime, where stable
+      periodic orbits briefly emerge.
+\end{enumerate}
+
+\subsection{The AC-Driven Pendulum and Routes to Chaos}\label{sec:ac-pendulum}
+
+The damped pendulum with a periodic (AC) driving torque provides another
+canonical route to chaos:
+\begin{equation}
+  \Gamma\cos(\omega t) = \ddot{\theta} + b\dot{\theta} + \sin\theta.
+\end{equation}
+Writing as a system with $\dot{\theta} = v$, $\dot{v} = -bv - \sin\theta +
+\Gamma\cos(\omega y)$, $\dot{y} = 1$, this is a three-dimensional
+autonomous system (the explicit time dependence elevates it to 3D).
+
+The Poincar\'e section (strobing at the drive frequency) reduces it to a
+2D map.  As $\Gamma$ increases, the system passes through:
+\begin{itemize}[leftmargin=2em]
+\item Periodic (phase-locked) motion,
+\item Period-doubling cascades,
+\item Chaotic tumbling,
+\end{itemize}
+providing a concrete physical system exhibiting the period-doubling route
+to chaos.
+
+
+% ──────────────────────────────────────────────
+\section{What Is Chaos?}\label{sec:chaos-defn}
+% ──────────────────────────────────────────────
+
+Before proceeding to maps, let us formalize the notion of chaos.
+
+\begin{definition}[Chaos---Working Definition]
+A dynamical system is \textbf{chaotic} if it satisfies all three conditions:
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Aperiodic long-term behavior:} Trajectories do not settle
+      to fixed points, periodic orbits, or quasiperiodic orbits.
+\item \textbf{Deterministic:} There is no randomness in the equations---the
+      system is governed by definite rules with no stochastic terms.
+\item \textbf{Sensitive dependence on initial conditions:} Nearby
+      trajectories diverge exponentially, with at least one positive
+      Lyapunov exponent.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}
+Chaos is \emph{not} randomness.  The underlying equations are perfectly
+deterministic; the apparent randomness arises from the amplification of
+microscopic uncertainties in initial conditions.  This is sometimes called
+\textbf{deterministic chaos} or \textbf{deterministic aperiodicity}.
+\end{remark}
+
+\begin{remark}
+Chaos requires at least three dimensions for continuous-time (flow) systems.
+In two dimensions, the Poincar\'e--Bendixson theorem constrains bounded
+trajectories to approach fixed points or closed orbits.  However, for
+discrete-time systems (maps), chaos is possible even in one dimension
+(e.g., the logistic map).
+\end{remark}
+
+% ──────────────────────────────────────────────
+\section{One-Dimensional Maps}\label{sec:1d-maps}
+% ──────────────────────────────────────────────
+
+\subsection{Introduction}
+
+Motivated by Poincar\'e maps and the Lorenz map, we now study
+discrete-time dynamical systems (\textbf{iterated maps}) of the form
+\begin{equation}\label{eq:map}
+  x_{n+1} = f(x_n),
+\end{equation}
+where $f:\R\to\R$ is a given function.
+
+\subsection{Fixed Points and Cobweb Diagrams}
+
+\begin{definition}
+A point $\xstar$ is a \textbf{fixed point} of the map~\eqref{eq:map} if
+$f(\xstar) = \xstar$.
+\end{definition}
+
+Graphically, fixed points are found by intersecting the graph of $f(x)$
+with the diagonal line $y=x$.
+
+\begin{keyresult}[Stability of a Fixed Point (Maps)]
+Let $\xstar$ be a fixed point of $x_{n+1}=f(x_n)$.  The \textbf{multiplier}
+is $\mu = f'(\xstar)$.
+\begin{itemize}[leftmargin=2em]
+\item $|\mu| < 1$: $\xstar$ is \textbf{stable} (attracting).
+\item $|\mu| > 1$: $\xstar$ is \textbf{unstable} (repelling).
+\item $|\mu| = 1$: inconclusive.
+\end{itemize}
+\end{keyresult}
+
+\begin{proof}
+Let $\delta_n = x_n - \xstar$.  Then
+$\delta_{n+1} = f(\xstar + \delta_n) - \xstar \approx f'(\xstar)\,\delta_n$,
+so $\delta_n \approx [f'(\xstar)]^n \delta_0$.
+\end{proof}
+
+\textbf{Cobweb construction:}  A graphical method for iterating maps.
+Starting from $(x_0, 0)$:
+\begin{enumerate}[leftmargin=2em]
+\item Go vertically to $y = f(x_0)$.
+\item Go horizontally to the diagonal $y = x$ (so the horizontal
+      coordinate is now $x_1 = f(x_0)$).
+\item Repeat.
+\end{enumerate}
+
+\subsection{Periodic Orbits}
+
+\begin{definition}
+A point $p$ has \textbf{period $n$} if $f^n(p) = p$ and $f^k(p)\neq p$
+for $0 < k < n$, where $f^n$ denotes the $n$-fold composition
+$f\circ f\circ\cdots\circ f$.
+\end{definition}
+
+A period-$n$ orbit is a fixed point of $f^n$.  Its stability is determined
+by the multiplier of $f^n$:
+\begin{equation}
+  (f^n)'(p) = f'(p)\cdot f'(f(p))\cdot f'(f^2(p))\cdots f'(f^{n-1}(p))
+  = \prod_{k=0}^{n-1} f'(f^k(p)).
+\end{equation}
+The orbit is stable if $|(f^n)'(p)| < 1$ and unstable if $|(f^n)'(p)| > 1$.
+
+\subsection{The Logistic Map}\label{sec:logistic}
+
+The most studied one-dimensional map is the \textbf{logistic map}:
+\begin{equation}\label{eq:logistic}
+  x_{n+1} = rx_n(1-x_n), \qquad 0 \le r \le 4.
+\end{equation}
+
+\subsubsection{Fixed Points}
+
+Setting $x = rx(1-x)$: the fixed points are $\xstar = 0$ and
+$\xstar = (r-1)/r$ (for $r>1$).
+
+Stability of $\xstar = (r-1)/r$:
+$f'(x) = r - 2rx$, so $f'(\xstar) = r - 2(r-1) = 2 - r$.
+This fixed point is stable when $|2-r|<1$, i.e., $1 < r < 3$.
+
+\subsubsection{Period Doubling}
+
+At $r = 3$, the fixed point $\xstar = (r-1)/r$ loses stability through a
+\textbf{flip bifurcation} ($f'(\xstar) = -1$).  A stable period-2 cycle is
+born.  As $r$ increases further:
+\begin{itemize}[leftmargin=2em]
+\item $r \approx 3$: period-2 cycle born.
+\item $r \approx 3.449$: period-4 cycle born.
+\item $r \approx 3.544$: period-8 cycle born.
+\item The cascade continues: period $2^n$ orbits for $n = 1, 2, 3, \ldots$
+\item The intervals between successive doublings shrink geometrically.
+\item At $r_\infty \approx 3.5699$: all periods $2^n$ coexist---the onset
+      of chaos.
+\end{itemize}
+
+\subsubsection{Period-Doubling Cascade and Feigenbaum's Universality}
+
+Let $r_n$ be the parameter value at which the period-$2^n$ cycle is born.
+Feigenbaum (1978) discovered that the ratios
+\begin{equation}
+  \frac{r_n - r_{n-1}}{r_{n+1} - r_n} \to \delta \approx 4.669\,201\ldots
+\end{equation}
+converge to a universal constant $\delta$ (\textbf{Feigenbaum's constant}),
+independent of the specific map $f$, as long as $f$ has a single quadratic
+maximum.
+
+\subsubsection{Periodic Windows}
+
+For $r > r_\infty$, chaos is interspersed with \textbf{periodic windows}---
+intervals of $r$ where a stable periodic orbit exists.  The most prominent
+is the period-3 window near $r \approx 3.83$.
+
+\begin{theorem}[Li--Yorke Theorem (1975)]
+If a continuous map on an interval has a period-3 orbit, then it has
+periodic orbits of \emph{every} period.
+\end{theorem}
+
+\subsection{Lyapunov Exponent}\label{sec:lyapunov-exp}
+
+\begin{definition}[Lyapunov Exponent for Maps]
+For a map $x_{n+1} = f(x_n)$ with initial condition $x_0$, the
+\textbf{Lyapunov exponent} is
+\begin{equation}\label{eq:lyap-map}
+  \lambda = \lim_{n\to\infty}\frac{1}{n}\sum_{k=0}^{n-1}\ln|f'(x_k)|
+  = \lim_{n\to\infty}\frac{1}{n}\ln\left|\frac{d f^n}{dx}\bigg|_{x_0}\right|.
+\end{equation}
+\end{definition}
+
+\textbf{Interpretation:}
+\begin{itemize}[leftmargin=2em]
+\item $\lambda > 0$: nearby orbits diverge exponentially---the system is
+      \textbf{chaotic}.
+\item $\lambda < 0$: nearby orbits converge---a stable periodic orbit
+      attracts.
+\item $\lambda = 0$: marginal case (e.g., at a bifurcation point or
+      neutral stability).
+\end{itemize}
+
+For two nearby initial conditions $x_0$ and $\tilde{x}_0 = x_0 + \delta_0$:
+\[
+  |\delta_n| \approx |\delta_0|\,e^{\lambda n}
+  \quad\Longrightarrow\quad
+  \lambda \approx \frac{1}{n}\ln\frac{|\delta_n|}{|\delta_0|}.
+\]
+
+\subsection{Renormalization}\label{sec:renormalization}
+
+The universality of the period-doubling cascade can be understood through
+\textbf{renormalization group} ideas.
+
+The key insight: near the period-doubling accumulation point $r_\infty$,
+the map $f^{2^n}$ (restricted to a small interval near the critical point)
+looks approximately like a rescaled copy of $f$ itself.  This self-similarity
+leads to a functional equation (the \textbf{Feigenbaum equation}):
+\begin{equation}
+  g(x) = -\alpha\, g\bigl(g(-x/\alpha)\bigr),
+\end{equation}
+where $g$ is the universal limiting function and
+$\alpha \approx 2.5029$ is the rescaling factor.  The constant $\delta$
+(Feigenbaum's constant) arises as the relevant eigenvalue of the
+renormalization operator linearized about $g$.
+
+
+% ──────────────────────────────────────────────
+\section{Fractals and Strange Attractors}\label{sec:fractals}
+% ──────────────────────────────────────────────
+
+\subsection{Fractal Dimension}
+
+Chaotic attractors typically have a \textbf{fractal} (non-integer) dimension.
+This reflects their infinitely detailed, self-similar structure.
+
+\begin{definition}[Box-Counting Dimension]
+Cover the set $S$ with $N(\epsilon)$ boxes of side length $\epsilon$.  The
+\textbf{box-counting dimension} (or Minkowski dimension) is
+\begin{equation}
+  d = \lim_{\epsilon\to 0}\frac{\ln N(\epsilon)}{\ln(1/\epsilon)}.
+\end{equation}
+\end{definition}
+
+\begin{example}[Self-Similar Fractals]
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Cantor set:} Formed by repeatedly removing the middle third
+      of intervals.  Dimension $d = \ln 2/\ln 3 \approx 0.631$.
+\item \textbf{Sierpinski triangle:} Dimension $d = \ln 3/\ln 2 \approx 1.585$.
+\item \textbf{Koch snowflake:} Dimension $d = \ln 4/\ln 3 \approx 1.262$.
+\end{itemize}
+For a self-similar fractal made of $N$ copies of itself scaled by factor
+$r$, the dimension is $d = \ln N / \ln(1/r)$.
+\end{example}
+
+\subsection{Dimension of Self-Similar Fractals}
+
+\begin{definition}[Self-Similarity Dimension]
+If a set $S$ is the union of $N$ non-overlapping copies of itself, each
+scaled by a factor $r$ (with $0 < r < 1$), then the
+\textbf{self-similarity dimension} is
+\begin{equation}
+  d = \frac{\ln N}{\ln(1/r)}.
+\end{equation}
+\end{definition}
+
+This coincides with the box-counting dimension for exact self-similar sets.
+For strange attractors (which are typically self-similar only in a
+statistical sense), one uses the box-counting or correlation dimension.
+
+\subsection{Strange Attractors}
+
+\begin{definition}[Strange Attractor]
+An attractor is \textbf{strange} if it has a fractal structure (non-integer
+dimension).  A \textbf{chaotic attractor} is a strange attractor on which
+trajectories exhibit sensitive dependence on initial conditions.
+\end{definition}
+
+Key examples:
+\begin{itemize}[leftmargin=2em]
+\item The \textbf{Lorenz attractor} has dimension $\approx 2.06$---slightly
+      more than a surface, reflecting its layered structure.
+\item The \textbf{H\'enon map} $x_{n+1} = 1 - ax_n^2 + y_n$,
+      $y_{n+1} = bx_n$ (with $a=1.4$, $b=0.3$) has a strange attractor
+      with dimension $\approx 1.26$.
+\item The \textbf{R\"ossler system}
+      $\dot{x} = -y-z$, $\dot{y} = x+ay$, $\dot{z} = b+z(x-c)$ produces
+      a simpler ``band'' attractor that is easier to visualize than Lorenz.
+\end{itemize}
+
+\begin{physicalnote}[Stretching and Folding]
+Strange attractors arise from the interplay of two mechanisms:
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Stretching:} Nearby trajectories diverge (positive Lyapunov
+      exponent), creating sensitive dependence.
+\item \textbf{Folding:} Since the attractor is bounded, the stretched-out
+      trajectories must fold back on themselves, creating the layered
+      fractal structure.
+\end{enumerate}
+This stretch-and-fold mechanism is analogous to kneading dough---each
+iteration creates finer and finer layers.
+\end{physicalnote}
+
+
+% ══════════════════════════════════════════════
+\part{Collective Behavior}
+% ══════════════════════════════════════════════
+
+% ──────────────────────────────────────────────
+\section{The Kuramoto Model}\label{sec:kuramoto}
+% ──────────────────────────────────────────────
+
+\subsection{Motivation: Synchronization in Nature}
+
+Synchronization phenomena are ubiquitous: fireflies flashing in unison,
+cardiac pacemaker cells, audience clapping in rhythm, circadian rhythms, and
+power grids.  The challenge is to understand how a large population of
+coupled oscillators can spontaneously synchronize.
+
+\subsection{The Model}
+
+Yoshiki Kuramoto (1975) proposed a beautifully simple model.  Consider $N$
+oscillators with phases $\theta_1, \ldots, \theta_N$.  Each oscillator has
+its own natural frequency $\omega_i$, drawn from a distribution $g(\omega)$
+(typically symmetric and unimodal, e.g., Gaussian or Lorentzian).  The
+coupling is all-to-all and sinusoidal:
+
+\begin{equation}\label{eq:kuramoto}
+\boxed{
+  \dot{\theta}_i = \omega_i + \frac{K}{N}\sum_{j=1}^{N}
+  \sin(\theta_j - \theta_i), \qquad i = 1,\ldots,N.
+}
+\end{equation}
+
+Here $K \ge 0$ is the \textbf{coupling strength}.
+
+\subsection{The Order Parameter}
+
+To measure the degree of synchronization, Kuramoto introduced the
+\textbf{complex order parameter}:
+\begin{equation}\label{eq:order-param}
+  re^{i\psi} = \frac{1}{N}\sum_{j=1}^{N} e^{i\theta_j},
+\end{equation}
+where $r\in[0,1]$ is the \textbf{coherence} (amplitude of the mean field)
+and $\psi$ is the \textbf{average phase}.
+
+\begin{itemize}[leftmargin=2em]
+\item $r = 1$: all oscillators are perfectly synchronized
+      ($\theta_j = \psi$ for all $j$).
+\item $r = 0$: the phases are uniformly distributed around the circle
+      (complete incoherence).
+\item $0 < r < 1$: partial synchronization.
+\end{itemize}
+
+\textbf{Mean-field form.}  Multiplying both sides of~\eqref{eq:order-param}
+by $e^{-i\theta_i}$ and taking the imaginary part:
+\[
+  r\sin(\psi - \theta_i) = \frac{1}{N}\sum_{j=1}^{N}
+  \sin(\theta_j - \theta_i).
+\]
+Thus the Kuramoto model becomes:
+\begin{equation}\label{eq:kuramoto-mf}
+  \dot{\theta}_i = \omega_i + Kr\sin(\psi - \theta_i).
+\end{equation}
+Each oscillator interacts only with the ``mean field'' $(r,\psi)$, not with
+every other oscillator individually.
+
+\subsection{Self-Consistency Analysis (Infinite $N$)}
+
+In the $N\to\infty$ limit, we look for a steady-state solution in a
+rotating frame where $\psi$ is constant (choose a frame where $\psi=0$).
+Oscillators split into two groups:
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Locked oscillators} ($|\omega_i| \le Kr$): these are
+      entrained to the mean field and satisfy $\dot{\theta}_i = 0$, i.e.,
+      $\omega_i = -Kr\sin\theta_i$, giving
+      $\theta_i = \arcsin(\omega_i / Kr)$.
+
+\item \textbf{Drifting oscillators} ($|\omega_i| > Kr$): these are not
+      captured by the mean field and continue to rotate, but nonuniformly.
+      Their steady-state density is inversely proportional to their angular
+      velocity: $\rho(\omega,\theta) \propto 1/|\dot{\theta}|$.
+\end{enumerate}
+
+The self-consistency condition requires the locked and drifting oscillators
+to produce exactly the assumed order parameter $r$.  This yields:
+\begin{equation}\label{eq:self-consistency}
+  r = \int_{-\pi/2}^{\pi/2} Kr\cos^2\theta\; g(Kr\sin\theta)\,d\theta,
+\end{equation}
+or equivalently, after canceling $r$ (for $r\neq 0$):
+\begin{equation}\label{eq:self-consistency-2}
+  1 = K\int_{-\pi/2}^{\pi/2} \cos^2\theta\; g(Kr\sin\theta)\,d\theta.
+\end{equation}
+
+\subsection{Critical Coupling and the Phase Transition}
+
+\begin{theorem}[Onset of Synchronization]
+There exists a critical coupling strength
+\begin{equation}\label{eq:Kc}
+  K_c = \frac{2}{\pi\, g(0)},
+\end{equation}
+such that:
+\begin{itemize}[leftmargin=2em]
+\item For $K < K_c$: the only stable solution is $r = 0$
+      (complete incoherence).
+\item For $K > K_c$: a partially synchronized state with $r > 0$
+      emerges.
+\end{itemize}
+Near the transition, $r \sim \sqrt{K - K_c}$, analogous to a
+\textbf{supercritical pitchfork bifurcation} (or a second-order phase
+transition in statistical mechanics).
+\end{theorem}
+
+\begin{proof}[Derivation of $K_c$]
+From~\eqref{eq:self-consistency-2}, in the limit $r\to 0^+$:
+\[
+  1 = K\int_{-\pi/2}^{\pi/2}\cos^2\theta\;g(0)\,d\theta
+  = Kg(0)\cdot\frac{\pi}{2},
+\]
+since $g(Kr\sin\theta)\to g(0)$ uniformly and
+$\int_{-\pi/2}^{\pi/2}\cos^2\theta\,d\theta = \pi/2$.
+Solving: $K_c = 2/(\pi g(0))$.
+\end{proof}
+
+\begin{physicalnote}[Analogy with Phase Transitions]
+The Kuramoto model undergoes a transition remarkably similar to a
+\textbf{ferromagnetic phase transition}: below $K_c$ (``high temperature''),
+there is no order; above $K_c$ (``low temperature''), spontaneous order
+emerges.  The order parameter $r$ plays the role of the magnetization, and
+$K$ plays the role of inverse temperature.  The square-root scaling
+$r\sim\sqrt{K-K_c}$ gives a critical exponent of $\beta = 1/2$, the same
+as mean-field theory in statistical mechanics.
+\end{physicalnote}
+
+
+% ══════════════════════════════════════════════
+% APPENDICES
+% ══════════════════════════════════════════════
+\appendix
+
+\section{Summary of Key Theorems}\label{app:theorems}
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Existence and Uniqueness} (\ref{thm:exist-unique}):
+      Guarantees local existence and uniqueness for $C^1$ vector fields.
+\item \textbf{Hartman--Grobman} (\ref{thm:hartman-grobman}):
+      Hyperbolic fixed points of nonlinear systems are topologically
+      equivalent to the corresponding linear system.
+\item \textbf{Dulac's Criterion} (\ref{thm:dulac}):
+      Rules out closed orbits via divergence conditions.
+\item \textbf{Poincar\'e--Bendixson} (\ref{thm:PB}):
+      A confined trajectory in 2D must approach a closed orbit.
+\item \textbf{Li--Yorke}:
+      Period 3 implies chaos (existence of all periods).
+\end{enumerate}
+
+\section{Useful Mathematical Facts}\label{app:math-facts}
+
+\subsection{Taylor Expansion for Stability Analysis}
+
+For a function $f\in C^n$ near a point $\xstar$:
+\[
+  f(x) = f(\xstar) + f'(\xstar)(x-\xstar) + \frac{f''(\xstar)}{2}(x-\xstar)^2
+  + \cdots + \frac{f^{(n)}(\xstar)}{n!}(x-\xstar)^n + O\bigl((x-\xstar)^{n+1}\bigr).
+\]
+
+\subsection{The Jacobian Matrix}
+
+For a vector field $\dot{\vec{x}} = \vec{F}(\vec{x})$ in $\R^n$:
+\[
+  J_{ij} = \pdv{F_i}{x_j}\bigg|_{\vec{x}^*}.
+\]
+The eigenvalues of $J$ determine the local stability of the fixed point
+$\vec{x}^*$.
+
+\subsection{Green's Theorem (for Dulac's Criterion)}
+
+For a continuously differentiable vector field
+$\vec{A}(x,y) = (P(x,y),\,Q(x,y))$ and a simple closed curve $C$ bounding
+a region $D$:
+\[
+  \oint_C (P\,dx + Q\,dy) = \iint_D \left(\pdv{Q}{x} - \pdv{P}{y}\right)dA.
+\]
+
+In divergence form (used for Dulac):
+\[
+  \iint_D \nabla\cdot\vec{A}\;dA = \oint_C \vec{A}\cdot\hat{n}\;dl.
+\]
+
+\subsection{Eigenvalues of a $2\times 2$ Matrix}
+
+For $A = \bigl(\begin{smallmatrix} a & b \\ c & d \end{smallmatrix}\bigr)$:
+\[
+  \lambda = \frac{(a+d) \pm \sqrt{(a+d)^2 - 4(ad-bc)}}{2}
+  = \frac{\tau \pm \sqrt{\tau^2 - 4\Delta}}{2}.
+\]
+
+\subsection{Polar Coordinate Conversions}
+
+$x = r\cos\theta$, $y = r\sin\theta$; \quad
+$r = \sqrt{x^2+y^2}$, $\theta = \arctan(y/x)$.
+
+Useful derivatives:
+\begin{align}
+  r\dot{r} &= x\dot{x} + y\dot{y}, \\
+  r^2\dot{\theta} &= x\dot{y} - y\dot{x}.
+\end{align}
+
+\end{document}
