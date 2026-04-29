@@ -86,6 +86,62 @@ at the level of a mathematical methods of physics course.\par}
 \newpage
 
 % ══════════════════════════════════════════════
+% OVERVIEW
+% ══════════════════════════════════════════════
+\section*{Overview: The Hierarchy of Dynamical Systems}
+\addcontentsline{toc}{section}{Overview: The Hierarchy of Dynamical Systems}
+
+A \textbf{dynamical system} is any rule that describes how a state
+evolves in time.  We study systems of the general form
+$\dot{\vec{x}} = \vec{F}(\vec{x})$ (continuous time) or
+$\vec{x}_{n+1} = \vec{F}(\vec{x}_n)$ (discrete time).
+
+\medskip\noindent\textbf{Hierarchy by dimension.}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}clll@{}}
+\toprule
+\textbf{Dim.} & \textbf{Phase space} & \textbf{Possible attractors}
+  & \textbf{Key tools} \\
+\midrule
+1 & Real line $\mathbb{R}$ & Fixed points only
+  & Phase line, potentials \\
+1 & Circle $S^1$ & Fixed pts, oscillations
+  & SNIPER bifurcation \\
+2 & Plane $\mathbb{R}^2$ & Fixed pts, limit cycles
+  & Poincar\'e--Bendixson \\
+3+ & $\mathbb{R}^n$ & Above + strange attractors
+  & Lyapunov exponents \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip\noindent\textbf{Linear vs.\ nonlinear.}  A linear system
+$\dot{\vec{x}}=A\vec{x}$ can be solved exactly by exponentiation:
+$\vec{x}(t)=e^{At}\vec{x}_0$.  It has no limit cycles or chaos.
+Nonlinearity is \emph{necessary} for the rich behavior studied in
+this course: bifurcations, limit cycles, strange attractors.
+
+\medskip\noindent\textbf{Continuous (flows) vs.\ discrete (maps).}
+Maps arise naturally as Poincar\'e sections of flows, lowering the
+dimension by one.  Chaos is possible in 1D maps but requires at
+least 3D in continuous-time autonomous flows
+(Poincar\'e--Bendixson theorem).
+
+\medskip\noindent\textbf{Key phenomena covered in these notes.}
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Fixed points and their stability} (everywhere).
+  \item \textbf{Bifurcations}: qualitative changes as a parameter crosses
+    a critical value.
+  \item \textbf{Oscillations}: limit cycles, flows on the circle.
+  \item \textbf{Chaos}: sensitive dependence, strange attractors,
+    Lyapunov exponents, fractal geometry.
+  \item \textbf{Collective behavior}: synchronization (Kuramoto model).
+\end{enumerate}
+
+\newpage
+
+% ══════════════════════════════════════════════
 % PART I: ONE-DIMENSIONAL FLOWS
 % ══════════════════════════════════════════════
 \part{One-Dimensional Flows}
@@ -762,6 +818,42 @@ The separatrix of the saddle at $(1,1)$ divides the first quadrant into two
 basins of attraction: one leading to $(3,0)$ (species $x$ wins) and the
 other to $(0,2)$ (species $y$ wins).  The outcome depends on initial conditions---\textbf{competitive exclusion}.
 
+\subsection{Application: The SIR Epidemic Model}
+
+The \textbf{SIR model} divides a fixed population into Susceptible ($S$),
+Infected ($I$), and Recovered ($R$) compartments, with $S+I+R=N$:
+\begin{equation}
+  \dot{S} = -\beta SI, \qquad \dot{I} = \beta SI - \gamma I,
+  \qquad \dot{R} = \gamma I.
+\end{equation}
+Since $R = N - S - I$, we study the 2D system in $(S,I)$:
+\begin{equation}
+  \dot{S} = -\beta SI, \qquad \dot{I} = I(\beta S - \gamma).
+\end{equation}
+
+\textbf{Fixed points:} The $I=0$ axis (disease-free) is a line of
+equilibria.  The interior has no fixed points with $I>0$.
+
+\textbf{Nullclines:}  $\dot{S}=0$ on $S=0$ or $I=0$;
+$\dot{I}=0$ on $I=0$ or $S = \gamma/\beta \equiv S_c$
+(the \textbf{herd immunity threshold}).
+
+\textbf{Key result.}  Define the \textbf{basic reproduction number}
+$\mathcal{R}_0 = \beta N/\gamma$:
+\begin{itemize}[leftmargin=2em]
+  \item If $S_0 < S_c$ (i.e., $\mathcal{R}_0 < 1$ effectively):
+    $\dot{I} < 0$ always; epidemic dies out.
+  \item If $S_0 > S_c$ (i.e., $\mathcal{R}_0 > 1$): epidemic peaks
+    when $S = S_c$, then $I$ decreases.  The epidemic ends not because
+    $I \to 0$ at $S_c$, but because $S$ is depleted below $S_c$.
+\end{itemize}
+
+The system is not a fixed-point problem but a \textbf{trajectory problem}:
+solutions are curves in the $(S,I)$ plane, flowing left (since
+$\dot{S} < 0$) and forming an arch.  There are \emph{no} closed orbits
+(Bendixson: $\nabla\cdot\vec{F} = -\beta I - (\beta S-\gamma)$, which
+can change sign, so we use a Liapunov function instead).
+
 \subsection{Conservative Systems}\label{sec:conservative}
 
 \begin{definition}[Conservative System]
@@ -914,6 +1006,31 @@ spiral toward the unit circle.
 
 Before searching for limit cycles, it is often useful to rule them out in
 certain regions.
+
+\subsubsection{Bendixson's Negative Criterion}
+
+\begin{theorem}[Bendixson's Criterion]\label{thm:bendixson}
+If $\nabla\cdot\vec{F} = \partial f/\partial x + \partial g/\partial y$
+is not identically zero and does not change sign in a simply connected
+region $R$, then there are no closed orbits entirely contained in $R$.
+\end{theorem}
+\begin{proof}
+Suppose a closed orbit $C$ exists in $R$.  By Green's theorem:
+\[
+  \oint_C \vec{F}\cdot\hat{n}\,dl = \iint_A \nabla\cdot\vec{F}\,dA.
+\]
+Since $C$ is a trajectory, $\vec{F}$ is tangent to $C$ everywhere, so
+$\vec{F}\cdot\hat{n}=0$ and the left side vanishes.  But if
+$\nabla\cdot\vec{F}$ has constant sign and is not identically zero, the
+right side is nonzero---a contradiction.
+\end{proof}
+
+\begin{remark}
+Bendixson's criterion is a special case of Dulac's criterion with $g=1$.
+It rules out limit cycles in systems where the divergence is one-signed.
+For example, the system $\dot{x}=y$, $\dot{y}=-x+y^2$ has
+$\nabla\cdot\vec{F} = 1 \neq 0$ (but constant), ruling out closed orbits.
+\end{remark}
 
 \subsubsection{Gradient Systems}
 
@@ -1226,6 +1343,106 @@ dimension by one.  A \textbf{closed orbit} of the flow corresponds to a
 \textbf{fixed point} of the Poincar\'e map.
 
 
+% ──────────────────────────────────────────────
+\section{Weakly Nonlinear Oscillations}\label{sec:weakly-nonlinear}
+% ──────────────────────────────────────────────
+
+\subsection{Motivation}
+
+For the Van der Pol oscillator with small $\mu \ll 1$:
+\[
+  \ddot{x} + x = \mu(1-x^2)\dot{x},
+\]
+the system is a \emph{weakly perturbed} harmonic oscillator.
+Regular perturbation theory (expanding $x = x_0 + \mu x_1 + \cdots$)
+fails because secular terms grow like $t\cos t$, making the expansion
+invalid for large $t$.  The method of \textbf{two-timing} (multiple
+scales) resolves this by introducing two time scales.
+
+\subsection{Two-Timing (Multiple Scale Analysis)}
+
+Introduce a slow time $T = \mu t$ alongside the fast time $t$.  Write
+$x = x(t, T)$ and use $\dot{x} = \partial_t x + \mu\partial_T x$.
+
+\textbf{Order $\mu^0$:}
+\[
+  \partial_t^2 x_0 + x_0 = 0 \implies
+  x_0 = r(T)\cos\bigl(t + \phi(T)\bigr).
+\]
+The amplitude $r$ and phase $\phi$ are allowed to vary on the slow time
+scale $T$.
+
+\textbf{Order $\mu^1$:}  Substituting into the Van der Pol equation
+and collecting the $\mu^1$ terms yields:
+\[
+  \partial_t^2 x_1 + x_1 = \bigl[\dot{r} - \tfrac{r}{2}(1-\tfrac{r^2}{4})\bigr]
+  \cdot 2\sin(t+\phi) + \text{(non-resonant terms)}.
+\]
+To suppress secular growth, set the coefficient of the resonant term to
+zero:
+\begin{equation}\label{eq:amplitude-eq}
+  \frac{dr}{dT} = \frac{r}{2}\!\left(1 - \frac{r^2}{4}\right), \qquad
+  \frac{d\phi}{dT} = 0.
+\end{equation}
+
+\textbf{Amplitude equation.}  Equation~\eqref{eq:amplitude-eq} is a
+logistic-type ODE: $r^* = 0$ (unstable) and $r^* = 2$ (stable).  In
+original time, the limit cycle has amplitude $r = 2$ and period
+$T = 2\pi$---consistent with the known exact result for the Van der Pol
+oscillator.
+
+\subsection{Averaging Method}
+
+A complementary approach is \textbf{averaging}.  Write the slowly
+varying amplitude in polar form $x = r\cos\theta$,
+$\dot{x} = -r\sin\theta$, where $\theta = t + \phi$.  The exact
+transformation to $(r,\phi)$ gives:
+\begin{align}
+  \dot{r} &= \mu f(r\cos\theta,-r\sin\theta)\cdot(-\sin\theta), \\
+  r\dot{\phi} &= \mu f(r\cos\theta,-r\sin\theta)\cdot(-\cos\theta).
+\end{align}
+For small $\mu$, $r$ and $\phi$ change slowly over one cycle.
+\textbf{Averaging} over $\theta\in[0,2\pi]$ gives the
+\textbf{averaged equations}:
+\begin{equation}
+  \dot{r} = \frac{\mu}{2\pi}\int_0^{2\pi}
+  f(r\cos\theta,-r\sin\theta)(-\sin\theta)\,d\theta, \quad
+  \dot{\phi} = \frac{\mu}{2\pi r}\int_0^{2\pi}
+  f(r\cos\theta,-r\sin\theta)(-\cos\theta)\,d\theta.
+\end{equation}
+
+These averaged equations are easier to analyze than the full system
+and capture the slow dynamics accurately to $O(\mu)$ over times
+$t = O(1/\mu)$.
+
+\begin{example}[Averaging for Van der Pol]
+With $f = (1-x^2)\dot{x} = (1-r^2\cos^2\theta)(r\sin\theta)$:
+\[
+  \dot{r} = \frac{\mu}{2\pi}\int_0^{2\pi}(1-r^2\cos^2\theta)(r\sin\theta)
+  (-\sin\theta)\,d\theta
+  = \frac{\mu r}{2}\!\left(1-\frac{r^2}{4}\right),
+\]
+recovering~\eqref{eq:amplitude-eq}. The frequency correction
+$\dot{\phi}$ vanishes to this order (no frequency shift at leading
+order for Van der Pol).
+\end{example}
+
+\subsection{Frequency Shift (Duffing Oscillator)}
+
+Consider the weakly nonlinear Duffing oscillator:
+\[
+  \ddot{x} + x + \mu x^3 = 0.
+\]
+By two-timing, the amplitude is constant ($r = r_0$) and the phase
+shifts:
+\[
+  \dot{\phi} = \frac{3\mu r_0^2}{8},
+\]
+giving a corrected frequency
+$\omega = 1 + \frac{3\mu r_0^2}{8}$ (amplitude-dependent frequency,
+a hallmark of nonlinearity).  This is the \textbf{backbone curve} of the
+Duffing oscillator.
+
 % ══════════════════════════════════════════════
 \part{Chaos}
 % ══════════════════════════════════════════════
@@ -1248,6 +1465,39 @@ Edward Lorenz (1963) derived a simplified model of atmospheric convection
 where $\sigma > 0$ is the Prandtl number, $r > 0$ is (proportional to) the
 Rayleigh number, and $b > 0$ is a geometric factor.  All parameters are
 positive.  The classic parameter values are $\sigma = 10$, $b = 8/3$.
+
+\subsection{Physical Derivation: The Lorenz Waterwheel}
+
+A concrete physical realization of the Lorenz equations is the
+\textbf{chaotic waterwheel} (Malkus, 1972).  Water drips at a constant
+rate into buckets arranged around a wheel.  Each bucket has a small
+hole so water leaks out.  The wheel can rotate freely in either
+direction, subject to friction.
+
+Let $\theta$ be the angular position of a bucket.  Expand the water
+mass distribution in Fourier modes:
+\[
+  m(\theta,t) = \sum_{n=0}^{\infty}[a_n(t)\sin(n\theta)
+  + b_n(t)\cos(n\theta)].
+\]
+The forcing (inflow) is $Q(\theta)=Q_0(1-\cos\theta)$ (most water
+near the top).  The equations for $\omega$ (angular velocity) and the
+$n=1$ Fourier coefficients $(a_1,b_1)$ close onto themselves:
+\begin{align}
+  \dot{\omega} &= -\nu\omega + \frac{\pi g r}{I}a_1, \\
+  \dot{a}_1 &= \omega b_1 - Ka_1, \\
+  \dot{b}_1 &= -\omega a_1 - Kb_1 + q_1,
+\end{align}
+where $\nu$ is rotational damping, $K$ is the leakage rate, and $q_1$
+is the $n=1$ inflow coefficient.
+
+Under the substitution
+$x = C_1 a_1$, $y = C_2 \omega$, $z = C_3(b_1 - q_1/K)$ with
+appropriate constants, these equations \emph{are exactly the Lorenz
+equations}.  This waterwheel analogy gives physical meaning to the
+variables: $x$ and $y$ are proportional to the mass imbalance and
+angular velocity; $z$ measures the deviation of the mass distribution
+from the symmetric state.
 
 \subsection{Simple Properties}
 
@@ -1277,14 +1527,21 @@ positive.  The classic parameter values are $\sigma = 10$, $b = 8/3$.
       from the Jacobian.  The origin is stable for $r<1$ and unstable (a
       saddle with one unstable direction) for $r>1$.
 
-\item \textbf{Stability of $C^\pm$:}  These are stable spirals for
-      $1 < r < r_H$, where
+\item \textbf{Stability of $C^\pm$:}  The Jacobian at $C^+$ is
+      \[
+        J = \begin{pmatrix} -\sigma & \sigma & 0 \\
+        1 & -1 & -x^* \\ x^* & x^* & -b \end{pmatrix}
+        \bigg|_{C^+}, \quad x^* = \sqrt{b(r-1)}.
+      \]
+      The characteristic polynomial is cubic.  By the Routh--Hurwitz
+      criterion, $C^\pm$ are stable for $1 < r < r_H$, where
       \begin{equation}
         r_H = \sigma\,\frac{\sigma + b + 3}{\sigma - b - 1}
+        \;\approx 24.74 \quad (\sigma=10,\,b=8/3).
       \end{equation}
-      (assuming $\sigma > b+1$).  At $r=r_H$, a \textbf{subcritical Hopf
-      bifurcation} occurs: $C^\pm$ lose stability and an unstable limit
-      cycle is absorbed.
+      (This requires $\sigma > b+1$, which holds for the classic values.)
+      At $r=r_H$, a \textbf{subcritical Hopf bifurcation} occurs:
+      $C^\pm$ lose stability and an unstable limit cycle is absorbed.
 
 \item \textbf{Trapping region:}  Using the Liapunov-like function
       $V = rx^2 + \sigma y^2 + \sigma(z-2r)^2$, one can show $\dot{V}<0$
@@ -1332,8 +1589,21 @@ Key observations:
 \item There are no stable fixed points or periodic orbits of the map,
       explaining the aperiodic behavior.
 \item The thinness of the map (nearly 1D) arises from the extreme
-      contraction in the dissipative system.
+      contraction in the dissipative system: volumes contract at rate
+      $e^{-(\sigma+1+b)t}$, so trajectories are squeezed onto an
+      approximately 2D surface.
 \end{itemize}
+
+\textbf{Why does the Lorenz map prove chaos?}  If the 1D map $z_{n+1}=g(z_n)$
+has $|g'|>1$ everywhere (slopes steeper than 1 throughout), then
+nearby initial conditions separate exponentially at each return.
+A fixed-point $z^*$ of $g$ would be unstable ($|g'(z^*)|>1$), confirming
+no stable periodic orbits.  The sensitive dependence is then rigorously
+demonstrated by the positive Lyapunov exponent of the map:
+\[
+  \lambda_{\mathrm{map}} = \lim_{n\to\infty}\frac{1}{n}
+  \sum_{k=0}^{n-1}\ln|g'(z_k)| > 0.
+\]
 
 \subsection{Exploring Parameter Space of the Lorenz System}
 
@@ -1375,6 +1645,112 @@ to chaos.
 
 
 % ──────────────────────────────────────────────
+\section{Lyapunov Exponents}\label{sec:lyapunov-flows}
+% ──────────────────────────────────────────────
+
+\subsection{Definition for Continuous-Time Systems}
+
+For a flow $\dot{\vec{x}} = \vec{F}(\vec{x})$ in $\mathbb{R}^n$, the
+\textbf{Lyapunov exponents} quantify the average rate of exponential
+divergence (or convergence) of infinitesimally close trajectories.
+
+Let $\vec{x}(t)$ be a reference trajectory and $\vec{x}(t)+\delta\vec{x}(t)$
+a nearby one.  The perturbation $\delta\vec{x}$ satisfies the
+\textbf{variational equations}:
+\begin{equation}\label{eq:variational}
+  \frac{d}{dt}\delta\vec{x} = J\bigl(\vec{x}(t)\bigr)\,\delta\vec{x},
+\end{equation}
+where $J(\vec{x}) = D\vec{F}(\vec{x})$ is the Jacobian matrix evaluated
+along the reference orbit.  Note that $J$ is \emph{time-dependent} because
+$\vec{x}(t)$ changes.
+
+\begin{definition}[Lyapunov Exponent---Continuous Time]
+The \textbf{$i$-th Lyapunov exponent} is
+\begin{equation}\label{eq:lyap-def}
+  \lambda_i = \lim_{t\to\infty}\frac{1}{t}\ln
+  \frac{\|\delta\vec{x}_i(t)\|}{\|\delta\vec{x}_i(0)\|},
+\end{equation}
+where $\delta\vec{x}_i(0)$ is chosen appropriately (along the $i$-th
+most unstable direction).  By convention, $\lambda_1 \ge \lambda_2 \ge
+\cdots \ge \lambda_n$.
+\end{definition}
+
+Computing multiple exponents requires orthogonalizing the perturbation
+vectors at each step (Gram--Schmidt), since without this all vectors
+tend to align with the most unstable direction.
+
+\subsection{The Lyapunov Spectrum}
+
+For an $n$-dimensional flow, there are $n$ Lyapunov exponents.  Their
+properties constrain the dynamics:
+
+\begin{keyresult}[Properties of the Lyapunov Spectrum]
+\begin{enumerate}[leftmargin=2em]
+\item For a \textbf{dissipative} system, the sum of all Lyapunov exponents
+      equals the average divergence of the flow:
+      \begin{equation}\label{eq:sum-lyap}
+        \sum_{i=1}^n \lambda_i = \lim_{T\to\infty}\frac{1}{T}
+        \int_0^T \nabla\cdot\vec{F}\bigl(\vec{x}(t)\bigr)\,dt.
+      \end{equation}
+      For the Lorenz system, $\nabla\cdot\vec{F} = -(\sigma+1+b) < 0$,
+      so $\lambda_1+\lambda_2+\lambda_3 = -(\sigma+1+b) = -13.667$.
+
+\item For a \textbf{flow} (continuous time), at least one exponent is
+      zero: $\lambda_j = 0$ corresponds to perturbations along the flow
+      direction, which neither grow nor shrink.
+
+\item A \textbf{fixed point} has all $\lambda_i < 0$.
+
+\item A \textbf{stable limit cycle} has one zero exponent (along the
+      orbit) and all others negative.
+
+\item A \textbf{chaotic attractor} has $\lambda_1 > 0$, $\lambda_j = 0$
+      (flow direction), and the remaining $\lambda_i < 0$.
+\end{enumerate}
+\end{keyresult}
+
+\subsection{Lyapunov Exponents for the Lorenz System}
+
+For the classic parameters $(\sigma,b,r) = (10,\,8/3,\,28)$, numerical
+computation gives:
+\begin{equation}
+  \lambda_1 \approx +0.906, \qquad \lambda_2 = 0, \qquad
+  \lambda_3 \approx -14.572.
+\end{equation}
+Checking: $\lambda_1+\lambda_2+\lambda_3 \approx -13.666 \approx -(\sigma+1+b)$. \checkmark
+
+The positive $\lambda_1$ confirms chaos.  The horizon time (Section~\ref{sec:lorenz}) uses $\lambda_1$:
+errors double roughly every $\ln 2 / \lambda_1 \approx 0.77$ time units.
+
+\subsection{Kaplan--Yorke (Lyapunov) Dimension}
+
+The fractal dimension of a strange attractor can be estimated from the
+Lyapunov spectrum via the \textbf{Kaplan--Yorke conjecture}:
+
+\begin{keyresult}[Kaplan--Yorke Dimension]
+Order the exponents $\lambda_1 \ge \lambda_2 \ge \cdots \ge \lambda_n$.
+Let $j$ be the largest index such that
+$\lambda_1 + \lambda_2 + \cdots + \lambda_j \ge 0$.  Then
+\begin{equation}\label{eq:KY-dim}
+  d_{\mathrm{KY}} = j + \frac{\lambda_1 + \cdots + \lambda_j}{|\lambda_{j+1}|}.
+\end{equation}
+\end{keyresult}
+
+For the Lorenz attractor:
+$d_{\mathrm{KY}} = 2 + \lambda_1/|\lambda_3| = 2 + 0.906/14.572
+\approx 2.062$.
+This agrees well with direct box-counting measurements ($\approx 2.06$),
+supporting the conjecture.
+
+\begin{physicalnote}[Interpretation of $d_{\mathrm{KY}}$]
+The integer part $j=2$ means the attractor locally ``looks like'' a
+two-dimensional surface.  The fractional part $0.062$ reflects the
+fine layered (Cantor-set) structure in the transverse direction.  The
+attractor is slightly thicker than a surface but far thinner than a
+solid.
+\end{physicalnote}
+
+% ──────────────────────────────────────────────
 \section{What Is Chaos?}\label{sec:chaos-defn}
 % ──────────────────────────────────────────────
 
@@ -1407,6 +1783,151 @@ trajectories to approach fixed points or closed orbits.  However, for
 discrete-time systems (maps), chaos is possible even in one dimension
 (e.g., the logistic map).
 \end{remark}
+
+% ──────────────────────────────────────────────
+\section{Routes to Chaos}\label{sec:routes-chaos}
+% ──────────────────────────────────────────────
+
+Three principal routes by which an ordered system transitions to chaos
+have been identified theoretically and observed experimentally.
+
+\subsection{Route 1: Period-Doubling Cascade (Feigenbaum)}
+
+The most common route begins with a stable fixed point (or limit cycle),
+which undergoes a \textbf{flip bifurcation} ($f'(\xstar)=-1$ for maps,
+or a subcritical Hopf in flows) as a parameter $r$ is increased.  A
+period-2 orbit appears; it in turn undergoes a flip, producing period-4;
+then period-8; and so on in an infinite cascade.
+
+\textbf{Structure of the cascade.}
+Let $r_n$ be the parameter value at which the $2^n$-cycle is born.
+\begin{itemize}[leftmargin=2em]
+  \item The sequence $\{r_n\}$ converges geometrically:
+    $r_n \to r_\infty$ as $n\to\infty$, with
+    \begin{equation}\label{eq:feig-delta}
+      \frac{r_n - r_{n-1}}{r_{n+1}-r_n} \;\longrightarrow\;
+      \delta \approx 4.669\,201\,609\ldots
+    \end{equation}
+    (Feigenbaum's constant $\delta$).
+  \item The amplitudes $d_n$ of the $2^n$-cycle near $r_\infty$ also
+    scale:
+    \begin{equation}
+      \frac{d_n}{d_{n+1}} \;\longrightarrow\; \alpha \approx 2.502\,907\ldots
+    \end{equation}
+    (Feigenbaum's $\alpha$).
+  \item Both $\delta$ and $\alpha$ are \textbf{universal}: they are the
+    same for every map with a single smooth (quadratic) maximum,
+    regardless of the specific functional form.  This was Feigenbaum's
+    1978 discovery.
+\end{itemize}
+
+\textbf{Why universality?}  The renormalization-group explanation
+(Section~\ref{sec:renormalization}) identifies $\delta$ and $\alpha$
+as eigenvalues of the doubling operator at its fixed point $g$.  The
+fixed point is a universal object independent of the particular map.
+
+\textbf{Onset of chaos.}  At $r = r_\infty$, the Lyapunov exponent
+$\lambda=0$.  For $r$ slightly above $r_\infty$:
+\[
+  \lambda \sim (r - r_\infty)^\nu, \qquad \nu \approx 0.4498\ldots
+\]
+providing another universal scaling law.
+
+\textbf{Experimental realizations.}
+\begin{itemize}[leftmargin=2em]
+  \item Rayleigh--B\'enard convection (Libchaber \& Maurer, 1980):
+    observed period-doubling cascade in liquid helium.
+  \item Driven nonlinear circuits (Linsay, 1981).
+  \item Dripping faucets, chemical oscillators (Belousov--Zhabotinsky
+    reaction).
+\end{itemize}
+
+\subsection{Route 2: Quasiperiodic Route (Ruelle--Takens--Newhouse)}
+
+As a parameter varies, the system passes through:
+\[
+\text{fixed point} \;\to\; \text{limit cycle} \;\to\; \text{2-torus}
+\;\to\; \text{chaos}.
+\]
+
+\begin{enumerate}[leftmargin=2em]
+\item A \textbf{Hopf bifurcation} creates a limit cycle with frequency
+  $\omega_1$.
+\item A second Hopf bifurcation (Neimark--Sacker for maps) creates a
+  \textbf{torus} $\mathbb{T}^2$ with a second frequency $\omega_2$.
+  If $\omega_1/\omega_2$ is irrational, motion is quasiperiodic (a
+  trajectory densely fills the torus).
+\item A third Hopf (Landau--Hopf scenario) would add $\omega_3$ on a
+  3-torus.  However, Ruelle, Takens, and Newhouse (1978) proved that
+  a 3-torus is \textbf{not structurally stable}: any small perturbation
+  can destroy it and produce a \textbf{strange attractor}.
+\end{enumerate}
+
+Thus, two incommensurate frequencies give quasiperiodicity; but as soon
+as a third mode appears, chaos can emerge without further parameter changes.
+
+\begin{physicalnote}[Power Spectrum Signature]
+In the quasiperiodic route, the power spectrum shows two sharp peaks at
+$\omega_1$ and $\omega_2$ (and their combinations $m\omega_1+n\omega_2$).
+The onset of chaos is marked by the appearance of broad-band noise in
+the spectrum.  This can be distinguished from the period-doubling route
+(which shows peaks at subharmonics $\omega/2$, $\omega/4$, \ldots).
+\end{physicalnote}
+
+\subsection{Route 3: Intermittency (Pomeau--Manneville, 1980)}
+
+In intermittency, a \textbf{periodic orbit disappears} at a bifurcation
+but leaves a ``ghost'' through which trajectories pass nearly periodically
+for long stretches before being ejected into chaotic bursts.
+
+\textbf{Three types}, based on the local bifurcation:
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Type I} (saddle-node of cycles): A stable and unstable
+  periodic orbit collide and annihilate.  For $r$ slightly past the
+  bifurcation, the orbit acts as a bottleneck.  Mean laminar length:
+  \[
+    \langle\tau\rangle \sim (r - r_c)^{-1/2}.
+  \]
+\item \textbf{Type II} (subcritical Hopf): Complex conjugate Floquet
+  multipliers cross the unit circle.  Laminar phases are longer and
+  more structured.
+\item \textbf{Type III} (subcritical period-doubling): A Floquet
+  multiplier exits at $-1$.  Mean laminar length:
+  \[
+    \langle\tau\rangle \sim (r_c - r)^{-1}.
+  \]
+\end{enumerate}
+
+\textbf{Phenomenology of Type I.}  Consider a 1D map with a near
+tangency: $x_{n+1} = x_n + \epsilon + x_n^2$ for small $\epsilon > 0$.
+The trajectory passes slowly through the narrow gap near $x=0$
+(``laminar phase''), taking $\sim \pi/\sqrt{\epsilon}$ iterations,
+then escapes to a chaotic region (``turbulent burst''), re-injects,
+and repeats.
+
+\textbf{Experimental realization.}  Pomeau and Manneville identified
+intermittency in a Lorenz-type model.  It has also been observed in
+Rayleigh--B\'enard convection and in the logistic map near the periodic
+windows (e.g., the period-3 window at $r \approx 3.83$).
+
+\subsection{Summary: Signatures of the Three Routes}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Route} & \textbf{Bifurcation} & \textbf{Power spectrum}
+  & \textbf{Scaling} \\
+\midrule
+Period-doubling & Flip cascade & Subharmonics $\omega/2^n$
+  & $\delta \approx 4.67$ \\
+Quasiperiodic & Hopf$\times$2+RTN & Broad-band after torus
+  & --- \\
+Intermittency & Tangent/Hopf/PD & Broad-band throughout
+  & $\langle\tau\rangle \sim \epsilon^{-1/2}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 % ──────────────────────────────────────────────
 \section{One-Dimensional Maps}\label{sec:1d-maps}
@@ -1525,6 +2046,46 @@ If a continuous map on an interval has a period-3 orbit, then it has
 periodic orbits of \emph{every} period.
 \end{theorem}
 
+\begin{theorem}[Sharkovsky's Theorem (1964)]
+Order the positive integers by the \textbf{Sharkovsky ordering}:
+\[
+  3 \rhd 5 \rhd 7 \rhd \cdots \rhd 2\cdot3 \rhd 2\cdot5 \rhd \cdots
+  \rhd 4\cdot3 \rhd 4\cdot5 \rhd \cdots \rhd 2^3 \rhd 2^2 \rhd 2 \rhd 1.
+\]
+(Odd numbers $>1$ first, then $2\times$odds, then $4\times$odds, \ldots,
+then powers of 2 in decreasing order, ending with 1.)
+
+If a continuous map $f:\mathbb{R}\to\mathbb{R}$ has a period-$n$ orbit,
+then it also has a period-$m$ orbit for every $m$ with $n\rhd m$.
+\end{theorem}
+
+\begin{remark}
+Period 3 is the largest in the Sharkovsky ordering, so it implies all
+periods.  Period $2^k$ (for any $k$) implies only periods that are
+powers of 2 up to $2^k$---this is why period-doubling cascades come in
+powers of 2 and terminate in ``period-3 implies all'' chaos.
+\end{remark}
+
+\subsubsection{Invariant Measure of the Logistic Map at $r=4$}
+
+The logistic map $x_{n+1} = 4x_n(1-x_n)$ at $r=4$ preserves the
+\textbf{arc-sine distribution}:
+\begin{equation}
+  \rho(x) = \frac{1}{\pi\sqrt{x(1-x)}}, \qquad x\in(0,1).
+\end{equation}
+This can be verified using the conjugacy $h(x) = \sin^2(\pi x/2)$ with
+the tent map (which preserves the uniform measure): pushing forward the
+uniform measure on $[0,1]$ via $h$ gives the arc-sine measure.
+
+\textbf{Consequence:}  For typical initial conditions $x_0$ (uniformly
+random), time-averages of observables $A(x_n)$ converge to spatial
+averages:
+\[
+  \lim_{N\to\infty}\frac{1}{N}\sum_{n=0}^{N-1}A(x_n)
+  = \int_0^1 A(x)\,\rho(x)\,dx.
+\]
+This is \textbf{ergodicity}.
+
 \subsection{Lyapunov Exponent}\label{sec:lyapunov-exp}
 
 \begin{definition}[Lyapunov Exponent for Maps]
@@ -1553,6 +2114,33 @@ For two nearby initial conditions $x_0$ and $\tilde{x}_0 = x_0 + \delta_0$:
   \lambda \approx \frac{1}{n}\ln\frac{|\delta_n|}{|\delta_0|}.
 \]
 
+\subsection{The Schwarzian Derivative}
+
+\begin{definition}[Schwarzian Derivative]
+For a $C^3$ function $f$, the \textbf{Schwarzian derivative} is
+\begin{equation}
+  Sf(x) = \frac{f'''(x)}{f'(x)} - \frac{3}{2}
+  \left(\frac{f''(x)}{f'(x)}\right)^2.
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Singer's Theorem, 1978]
+If $Sf(x) < 0$ for all $x$ in the interval, then:
+\begin{enumerate}[leftmargin=2em]
+  \item Every stable periodic orbit of $f$ attracts at least one
+    critical point.
+  \item The number of stable periodic orbits is at most the number
+    of critical points of $f$.
+\end{enumerate}
+\end{theorem}
+
+For the logistic map $f(x) = rx(1-x)$:
+$Sf(x) = -6r^2(1-2x)^2/[r(1-2x)]^2 - \cdots = -\frac{3}{2} < 0$
+everywhere (after computation).  Hence the logistic map has at most
+one stable periodic orbit at any parameter value---the orbit observed
+numerically (the period-$2^n$ cycle in the doubling cascade, or the
+period-3 cycle in its window) is the \emph{only} stable orbit.
+
 \subsection{Renormalization}\label{sec:renormalization}
 
 The universality of the period-doubling cascade can be understood through
@@ -1570,6 +2158,143 @@ $\alpha \approx 2.5029$ is the rescaling factor.  The constant $\delta$
 (Feigenbaum's constant) arises as the relevant eigenvalue of the
 renormalization operator linearized about $g$.
 
+
+% ──────────────────────────────────────────────
+\section{Symbolic Dynamics and the Tent Map}\label{sec:symbolic}
+% ──────────────────────────────────────────────
+
+\subsection{The Tent Map}
+
+The \textbf{tent map} is
+\begin{equation}\label{eq:tent}
+  T(x) = \begin{cases} 2x, & 0 \le x \le \tfrac{1}{2}, \\
+                        2(1-x), & \tfrac{1}{2} < x \le 1. \end{cases}
+\end{equation}
+The slope is $\pm 2$ everywhere, so $|T'| = 2 > 1$ everywhere (except
+$x=\tfrac{1}{2}$).
+
+\textbf{Exact Lyapunov exponent.}  Since $|T'(x)| = 2$ for all $x$ (a.e.):
+\[
+  \lambda = \lim_{n\to\infty}\frac{1}{n}\sum_{k=0}^{n-1}\ln|T'(x_k)|
+  = \ln 2 \approx 0.693.
+\]
+The tent map is maximally chaotic in the sense that every bit of
+information is generated per iterate.
+
+\textbf{Invariant measure.}  The tent map preserves the uniform
+(Lebesgue) measure on $[0,1]$: if $x_0$ is chosen uniformly, then
+every $x_n$ is also uniformly distributed.
+
+\subsection{Symbolic Dynamics}
+
+\textbf{Symbolic dynamics} converts the dynamics of a map into a
+discrete sequence problem.
+
+\begin{definition}[Itinerary]
+Partition $[0,1]$ into two \textbf{symbols}: $L = [0,\tfrac{1}{2})$
+and $R = [\tfrac{1}{2},1]$.  The \textbf{itinerary} of $x_0$ is the
+bi-infinite (or one-sided) sequence
+\[
+  s(x_0) = s_0 s_1 s_2 \cdots, \quad s_n = \begin{cases} L & T^n(x_0) < \tfrac{1}{2}, \\ R & T^n(x_0) \ge \tfrac{1}{2}. \end{cases}
+\]
+\end{definition}
+
+\begin{definition}[Shift Map]
+The \textbf{shift map} $\sigma$ acts on sequences:
+\[
+  \sigma(s_0 s_1 s_2 \cdots) = s_1 s_2 s_3 \cdots.
+\]
+\end{definition}
+
+The key relationship is:
+\begin{equation}
+  s(T(x)) = \sigma(s(x)).
+\end{equation}
+Thus the tent map dynamics on $[0,1]$ is \emph{conjugate} to the shift
+map on the space of binary sequences $\{L,R\}^{\mathbb{N}}$.
+
+\textbf{Consequences of symbolic dynamics.}
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Periodic orbits:} Period-$n$ orbits of $T$ correspond
+    to period-$n$ sequences of the shift.  There are exactly $2^n$
+    sequences of period $n$, hence the tent map has $2^n$ period-$n$
+    points.  This confirms the existence of periodic orbits of all periods.
+  \item \textbf{Sensitive dependence:}  Two orbits with itineraries
+    differing first at position $n$ are initially within $2^{-n}$ of
+    each other but have diverged to $O(1)$ separation by step $n$.
+    This is sensitive dependence made rigorous.
+  \item \textbf{Topological entropy:}  The rate of growth of distinct
+    itineraries is $h = \ln 2$, confirming maximum complexity.
+\end{enumerate}
+
+\subsection{Topological Conjugacy}
+
+\begin{definition}[Topological Conjugacy]
+Two maps $f:X\to X$ and $g:Y\to Y$ are \textbf{topologically conjugate}
+if there exists a homeomorphism $h:X\to Y$ such that
+\begin{equation}
+  h \circ f = g \circ h, \quad\text{i.e.,}\quad
+  h(f(x)) = g(h(x)).
+\end{equation}
+\end{definition}
+
+Conjugate maps have the same dynamics up to relabeling of points:
+same number of periodic orbits of each period, same Lyapunov exponent,
+same topological entropy.
+
+\begin{theorem}[Logistic--Tent Conjugacy]
+The logistic map $f(x) = 4x(1-x)$ on $[0,1]$ is topologically conjugate
+to the tent map $T$ on $[0,1]$ via the homeomorphism
+\begin{equation}
+  h(x) = \sin^2\!\bigl(\tfrac{\pi}{2}x\bigr), \quad
+  h^{-1}(y) = \tfrac{2}{\pi}\arcsin\sqrt{y}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+One verifies $f(h(x)) = 4\sin^2\!\bigl(\tfrac{\pi x}{2}\bigr)
+\cos^2\!\bigl(\tfrac{\pi x}{2}\bigr) = \sin^2(\pi x) = h(T(x))$
+using the double-angle formula $\sin(\pi x) = 2\sin(\tfrac{\pi x}{2})
+\cos(\tfrac{\pi x}{2})$.
+\end{proof}
+
+\begin{corollary}
+The logistic map at $r=4$ has Lyapunov exponent $\lambda = \ln 2$ and
+is chaotic on all of $[0,1]$.
+\end{corollary}
+
+\subsection{Smale Horseshoe}
+
+The \textbf{Smale horseshoe} (1967) is the prototypical mechanism
+producing chaos in two-dimensional maps.  Consider the unit square
+$Q = [0,1]^2$.  The horseshoe map $F$ acts as follows:
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Stretch} $Q$ vertically by factor $>2$ and contract
+    horizontally by factor $<\tfrac{1}{2}$.
+  \item \textbf{Fold} the resulting rectangle into a horseshoe shape
+    and place it back over $Q$.
+\end{enumerate}
+The intersection $Q \cap F(Q)$ consists of two vertical strips.
+$Q \cap F(Q) \cap F^2(Q)$ consists of four strips; and so on.
+
+\textbf{Invariant set.}  Points that remain in $Q$ under all forward
+and backward iterations form a Cantor-set-like invariant set
+$\Lambda = \bigcap_{n=-\infty}^{\infty} F^n(Q)$, which is homeomorphic
+to $\{0,1\}^{\mathbb{Z}}$ (bi-infinite binary sequences).  The dynamics
+on $\Lambda$ is conjugate to the \textbf{full two-sided shift}, which
+has:
+\begin{itemize}[leftmargin=2em]
+  \item Periodic orbits of every period,
+  \item A dense orbit (transitive dynamics),
+  \item Sensitive dependence on initial conditions.
+\end{itemize}
+
+\begin{physicalnote}[Horseshoe in Lorenz and Poincaré Maps]
+The Smale horseshoe appears as the ``skeleton'' underlying many chaotic
+systems.  In the Poincar\'e section of the Lorenz system, successive
+returns trace out a shape that, after topological deformation, is
+conjugate to a symbolic system.  This explains why the Lorenz attractor
+has periodic orbits of all periods interleaved with chaotic motion.
+\end{physicalnote}
 
 % ──────────────────────────────────────────────
 \section{Fractals and Strange Attractors}\label{sec:fractals}
@@ -1614,6 +2339,165 @@ This coincides with the box-counting dimension for exact self-similar sets.
 For strange attractors (which are typically self-similar only in a
 statistical sense), one uses the box-counting or correlation dimension.
 
+% ──────────────────────────────────────────────
+\section{The Rössler System}\label{sec:rossler}
+% ──────────────────────────────────────────────
+
+\subsection{Equations and Motivation}
+
+The \textbf{Rössler system} (1976) was designed to be the simplest
+possible chaotic flow.  It has only one nonlinear term:
+\begin{equation}\label{eq:rossler}
+\boxed{
+  \dot{x} = -y - z, \qquad
+  \dot{y} = x + ay, \qquad
+  \dot{z} = b + z(x - c),
+}
+\end{equation}
+with classic parameters $a = b = 0.2$ and $c = 5.7$.
+
+\subsection{Fixed Points}
+
+Setting $\dot{x}=\dot{y}=\dot{z}=0$:
+\begin{align*}
+  z &= -y, \quad x = -ay = ac/2 \pm \tfrac{a}{2}\sqrt{c^2 - 4b}, \\
+  y_{\pm} &= -\tfrac{c}{2a}\pm\tfrac{1}{2a}\sqrt{c^2-4b}.
+\end{align*}
+For $a=b=0.2$, $c=5.7$: two fixed points exist approximately at
+$P^+ \approx (0.007,\,-0.035,\,0.035)$ and
+$P^- \approx (5.693,\,-28.47,\,28.47)$.
+
+Linearization at $P^\pm$ shows $P^+$ is an unstable spiral-saddle
+(eigenvalues include a positive real part) and $P^-$ is a saddle.
+The attractor lives near $P^+$.
+
+\subsection{The Rössler Attractor and Period-Doubling Route}
+
+For small $c$, the Rössler system has a stable limit cycle.  As $c$
+increases with $a=b=0.2$:
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}ll@{}}
+\toprule
+$c$ & Behavior \\
+\midrule
+$c \approx 4.2$ & Period-1 limit cycle \\
+$c \approx 6.0$ & Period-2 \\
+$c \approx 8.5$ & Period-4 \\
+$c \approx 8.7$ & Period-8, cascade continues \\
+$c \approx 9.0$ & Onset of chaos \\
+$c = 5.7$ (classic) & Chaos: ``band'' attractor \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The Rössler attractor has a characteristic \textbf{band shape}:
+trajectories spiral outward in the $xy$-plane, are then injected back
+near the $z$-axis, fold once, and return.  Because there is only one
+fold, the Poincaré map is approximately a one-humped map---more
+regular than Lorenz---and the period-doubling cascade is clearly
+observed.
+
+\begin{keyresult}[Rössler Lyapunov Exponents (classic parameters)]
+$\lambda_1 \approx +0.071$, $\lambda_2 = 0$, $\lambda_3 \approx -5.39$.
+Kaplan--Yorke dimension: $d_{\mathrm{KY}} = 2 + 0.071/5.39 \approx 2.013$.
+The attractor is barely fractal (close to a 2D surface).
+\end{keyresult}
+
+\subsection{Comparison: Rössler vs.\ Lorenz}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+& \textbf{Lorenz} & \textbf{Rössler} \\
+\midrule
+Nonlinear terms & 2 ($xz$, $xy$) & 1 ($xz$) \\
+Symmetry & $\mathbb{Z}_2$: $(x,y)\to(-x,-y)$ & None \\
+Attractor & Butterfly (two wings) & Band (one wing) \\
+Route to chaos & Via $r$; subcritical Hopf & Period-doubling in $c$ \\
+Poincaré map & Nearly 1D humped map & Clearly 1D humped \\
+$d_{\mathrm{KY}}$ & $\approx 2.06$ & $\approx 2.01$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ──────────────────────────────────────────────
+\section{The H\'enon Map}\label{sec:henon}
+% ──────────────────────────────────────────────
+
+\subsection{Definition and Motivation}
+
+The \textbf{H\'enon map} (1976) is the simplest two-dimensional map
+known to have a strange attractor:
+\begin{equation}\label{eq:henon}
+  x_{n+1} = 1 - ax_n^2 + y_n, \qquad y_{n+1} = bx_n,
+\end{equation}
+with classic parameters $a = 1.4$, $b = 0.3$.  It was constructed as a
+simplified model of the Poincar\'e section of the Lorenz system.
+
+\subsection{Properties}
+
+\textbf{Area contraction.}  The Jacobian of the map is
+\[
+  J = \begin{pmatrix} -2ax & 1 \\ b & 0 \end{pmatrix},
+  \quad \det J = -b.
+\]
+The area of any region contracts by factor $|b| = 0.3$ at each iteration.
+Since $|b| < 1$, the map is \textbf{dissipative}.
+
+\textbf{Invertibility.}  $\det J \neq 0$ for all $(x,y)$, so the map
+is invertible:
+\[
+  x_n = y_{n+1}/b, \qquad y_n = x_{n+1} - 1 + a(y_{n+1}/b)^2.
+\]
+
+\textbf{Reduction to 1D.}  When $b = 0$: $y_{n+1} = 0$ for all $n \ge 1$,
+and the map reduces to $x_{n+1} = 1 - ax_n^2$, which is conjugate to
+the logistic map.  Thus the Hénon map ``thickens'' the logistic map
+into two dimensions.
+
+\subsection{Fixed Points and Stability}
+
+Fixed points satisfy $x^* = 1 - a(x^*)^2 + bx^*$, giving
+\[
+  x^* = \frac{(b-1) \pm \sqrt{(1-b)^2 + 4a}}{2a}.
+\]
+For $a=1.4$, $b=0.3$:
+$x^*_1 \approx 0.884$ (unstable) and $x^*_2 \approx -1.026$ (unstable).
+
+Both fixed points are unstable for the classic parameters---the attractor
+is not a fixed point or cycle.
+
+\subsection{The H\'enon Strange Attractor}
+
+For $a=1.4$, $b=0.3$, a typical initial condition generates an orbit that
+converges to the \textbf{H\'enon strange attractor}:
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Dimension:} $d \approx 1.26$ (box-counting).
+    Kaplan--Yorke: $\lambda_1 \approx 0.42$, $\lambda_2 \approx -1.62$,
+    giving $d_{\mathrm{KY}} = 1 + 0.42/1.62 \approx 1.26$.
+  \item \textbf{Structure:} Zooming in reveals a Cantor-set structure
+    in the transverse direction---layers of curves, each containing
+    more layers, ad infinitum.
+  \item \textbf{Topological horseshoe:} The H\'enon attractor contains
+    a Smale horseshoe as a subsystem, proving the existence of periodic
+    orbits of all periods.
+\end{itemize}
+
+\subsection{Bifurcation Diagram of the H\'enon Map}
+
+Fixing $b=0.3$ and varying $a$:
+\begin{itemize}[leftmargin=2em]
+  \item $0 < a \lesssim 0.37$: stable fixed point.
+  \item $a \approx 0.37$: first period-doubling.
+  \item Period-doubling cascade with Feigenbaum ratio $\delta$ (same
+    universal constant as the logistic map).
+  \item $a \gtrsim 1.06$: onset of sustained chaos.
+  \item $a = 1.4$: classic strange attractor.
+  \item $a > 1.43$: most orbits escape to infinity.
+\end{itemize}
+
 \subsection{Strange Attractors}
 
 \begin{definition}[Strange Attractor]
@@ -1646,6 +2530,70 @@ Strange attractors arise from the interplay of two mechanisms:
 This stretch-and-fold mechanism is analogous to kneading dough---each
 iteration creates finer and finer layers.
 \end{physicalnote}
+
+\subsection{Correlation Dimension}
+
+The box-counting dimension counts boxes uniformly.  A more practical
+and statistically robust measure is the \textbf{correlation dimension}
+$d_2$ (Grassberger--Procaccia, 1983).
+
+\begin{definition}[Correlation Integral]
+Given $N$ points $\{\vec{x}_i\}$ sampled from the attractor, define
+\begin{equation}
+  C(\epsilon) = \lim_{N\to\infty}\frac{1}{N^2}\#\{(i,j):\|\vec{x}_i
+  - \vec{x}_j\| < \epsilon\}.
+\end{equation}
+For a fractal attractor, $C(\epsilon) \sim \epsilon^{d_2}$ as
+$\epsilon\to 0$, defining the correlation dimension:
+\begin{equation}
+  d_2 = \lim_{\epsilon\to 0}\frac{\ln C(\epsilon)}{\ln\epsilon}.
+\end{equation}
+\end{definition}
+
+In practice, $d_2$ is estimated from the slope of $\ln C(\epsilon)$
+vs.\ $\ln\epsilon$.  For the Lorenz attractor, $d_2 \approx 2.05$,
+consistent with $d_{\mathrm{KY}} \approx 2.06$.
+
+\subsection{Crises: Sudden Changes in Chaotic Attractors}
+
+A \textbf{crisis} is a sudden qualitative change in a chaotic attractor
+caused by its collision with an unstable fixed point or periodic orbit
+as a parameter varies.
+
+\textbf{Boundary crisis.}  The chaotic attractor collides with its own
+\emph{basin boundary} (which is an unstable set).  After the collision,
+the attractor is destroyed and trajectories escape to infinity (or
+another attractor).  The attractor existed just before the crisis;
+after, typical orbits are transient before escaping.
+
+\textbf{Interior crisis.}  Two (or more) chaotic attractors suddenly
+merge into one larger attractor.  In the logistic map, the period-3
+window ends when the chaotic band merges with a larger chaotic region---
+this is an interior crisis at $r \approx 3.857$.
+
+\textbf{Scaling near a crisis.}  Near a boundary crisis at parameter
+$\mu_c$, the average transient lifetime before escape scales as:
+\begin{equation}
+  \langle\tau\rangle \sim |\mu - \mu_c|^{-\gamma},
+\end{equation}
+where $\gamma$ is related to the eigenvalues of the unstable fixed point
+at the collision.
+
+\subsection{Summary: Properties of Chaotic Attractors}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Attractor} & $\lambda_1$ & $d_{\mathrm{KY}}$ & \textbf{Route} \\
+\midrule
+Lorenz (std.\ params) & $\approx 0.906$ & $\approx 2.06$ & Subcritical Hopf \\
+R\"ossler (std.) & $\approx 0.071$ & $\approx 2.01$ & Period-doubling \\
+H\'enon ($a=1.4$) & $\approx 0.42$ & $\approx 1.26$ & Period-doubling \\
+Logistic ($r=4$) & $\ln 2 \approx 0.693$ & $1.0$ & Period-doubling \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 
 % ══════════════════════════════════════════════
@@ -1781,6 +2729,139 @@ as mean-field theory in statistical mechanics.
 
 
 % ══════════════════════════════════════════════
+\part{Additional Topics}
+% ══════════════════════════════════════════════
+
+% ──────────────────────────────────────────────
+\section{Hamiltonian Systems and KAM Theory}\label{sec:hamiltonian}
+% ──────────────────────────────────────────────
+
+\subsection{Hamiltonian Systems}
+
+A \textbf{Hamiltonian system} with $n$ degrees of freedom has a
+function $H(q_1,\ldots,q_n,p_1,\ldots,p_n)$ (the Hamiltonian) and
+equations of motion:
+\begin{equation}
+  \dot{q}_i = \frac{\partial H}{\partial p_i}, \qquad
+  \dot{p}_i = -\frac{\partial H}{\partial q_i}.
+\end{equation}
+
+Key differences from dissipative systems:
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Volume preservation (Liouville's theorem):}
+    $\nabla\cdot\vec{F} = \sum_i(\partial^2 H/\partial q_i\partial p_i
+    - \partial^2 H/\partial p_i\partial q_i) = 0$.  Phase-space volumes
+    are preserved.
+  \item \textbf{No attractors:}  Since volume is preserved, there can be
+    no attracting sets (which would require volume contraction).
+  \item \textbf{Energy conservation:}  $\dot{H} = 0$ along trajectories.
+  \item \textbf{Time-reversibility:}  Under $t\to-t$, $p\to-p$, the
+    equations are unchanged.
+\end{enumerate}
+
+\subsection{Integrable Systems and Action-Angle Variables}
+
+A Hamiltonian system with $n$ degrees of freedom is \textbf{integrable}
+(in the Liouville--Arnold sense) if it has $n$ independent conserved
+quantities $I_1,\ldots,I_n$ in involution
+($\{I_i,I_j\}=0$ for all $i,j$, where $\{\cdot,\cdot\}$ is the
+Poisson bracket).
+
+In that case, the motion is confined to $n$-dimensional tori in the
+$2n$-dimensional phase space.  In \textbf{action-angle variables}
+$(I_i,\theta_i)$, the equations become:
+\[
+  \dot{I}_i = 0, \quad \dot{\theta}_i = \omega_i(I_1,\ldots,I_n),
+\]
+so the actions are constants and the angles evolve uniformly---pure
+quasiperiodic motion.
+
+\subsection{Chaos in Hamiltonian Systems}
+
+For \emph{non-integrable} Hamiltonian systems, the KAM theorem and
+its breakdown govern the onset of chaos.
+
+\begin{theorem}[KAM Theorem---Informal]
+Consider an integrable Hamiltonian $H_0$ perturbed by $\epsilon H_1$.
+Most tori with \textbf{sufficiently irrational} frequency ratios
+$\omega_i/\omega_j$ survive the perturbation (with slight deformation)
+for small $\epsilon$.  Tori with \textbf{rational} (resonant) frequency
+ratios are destroyed and replaced by alternating stable/unstable
+periodic orbits (Poincar\'e--Birkhoff theorem).
+\end{theorem}
+
+\textbf{Consequences:}
+\begin{itemize}[leftmargin=2em]
+  \item The phase portrait of a non-integrable Hamiltonian is a mixture
+    of regular (KAM tori) and chaotic (destroyed tori) regions.
+  \item Chaos lives in the gaps between KAM tori, near the separatrices
+    of resonant orbits.
+  \item As $\epsilon$ increases, more and more tori break, and the
+    chaotic region grows.  At a critical value, the last KAM torus
+    breaks and global diffusion becomes possible
+    (Chirikov resonance overlap criterion).
+\end{itemize}
+
+\textbf{Contrast with dissipative chaos.}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+& \textbf{Dissipative} & \textbf{Hamiltonian} \\
+\midrule
+Volume in phase space & Contracts & Preserved \\
+Attractors & Yes (strange attractor) & No \\
+Lyapunov exponents & Sum $<0$ & Sum $=0$ (pairs $\pm\lambda$) \\
+Fractal structure & Attractor has $d<n$ & Chaotic region has $d=n$ \\
+Long-time behavior & Confined to attractor & Diffusive (Arnol'd diffusion) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{example}[Standard Map]
+The \textbf{Chirikov standard map} is the canonical 2D area-preserving map:
+\begin{equation}
+  p_{n+1} = p_n + K\sin\theta_n, \qquad
+  \theta_{n+1} = \theta_n + p_{n+1} \pmod{2\pi}.
+\end{equation}
+For $K=0$: integrable (circles in the $(\theta,p)$ torus).
+For small $K$: mostly KAM tori with thin chaotic layers near resonances.
+For $K \gtrsim 0.97$: last KAM torus breaks (Greene's criterion), and
+global chaos emerges.  For large $K$: widespread chaos throughout phase space.
+\end{example}
+
+% ──────────────────────────────────────────────
+\section{Controlling Chaos}\label{sec:controlling-chaos}
+% ──────────────────────────────────────────────
+
+\subsection{The OGY Method}
+
+Ott, Grebogi, and Yorke (1990) showed that chaos can be
+\textbf{controlled} by exploiting its dense set of unstable periodic
+orbits.  The idea: the chaotic attractor contains infinitely many
+unstable periodic orbits (UPOs), each embedded in the attractor.
+By applying small, carefully timed perturbations to a system parameter,
+one can \emph{stabilize} a chosen UPO.
+
+\textbf{Algorithm sketch.}
+\begin{enumerate}[leftmargin=2em]
+  \item Choose a target unstable period-$n$ orbit $\{\vec{x}_1^*,\ldots,
+    \vec{x}_n^*\}$ embedded in the chaotic attractor.
+  \item When the system's trajectory passes near $\vec{x}_k^*$, apply
+    a small parameter perturbation $\delta p$ such that the trajectory
+    is pushed toward the stable manifold of $\vec{x}_k^*$.
+  \item Repeat at each return to the Poincar\'e section.
+\end{enumerate}
+Because the perturbation is small, the system retains its chaotic
+nature when control is off.  The key advantage over standard stabilization
+is that no large actuator effort is needed---the chaotic dynamics do most
+of the work.
+
+\textbf{Experimental realizations:}
+Magnetic ribbon, cardiac arrhythmias (stabilizing cardiac chaos),
+laser systems, chemical oscillators.
+
+% ══════════════════════════════════════════════
 % APPENDICES
 % ══════════════════════════════════════════════
 \appendix
@@ -1790,16 +2871,87 @@ as mean-field theory in statistical mechanics.
 \begin{enumerate}[leftmargin=2em]
 \item \textbf{Existence and Uniqueness} (\ref{thm:exist-unique}):
       Guarantees local existence and uniqueness for $C^1$ vector fields.
+      Corollary: trajectories cannot cross.
 \item \textbf{Hartman--Grobman} (\ref{thm:hartman-grobman}):
       Hyperbolic fixed points of nonlinear systems are topologically
       equivalent to the corresponding linear system.
 \item \textbf{Dulac's Criterion} (\ref{thm:dulac}):
       Rules out closed orbits via divergence conditions.
 \item \textbf{Poincar\'e--Bendixson} (\ref{thm:PB}):
-      A confined trajectory in 2D must approach a closed orbit.
-\item \textbf{Li--Yorke}:
-      Period 3 implies chaos (existence of all periods).
+      A confined trajectory in 2D with no fixed points must approach
+      a closed orbit.
+\item \textbf{Li--Yorke (1975):}
+      Period 3 implies existence of orbits of every period.
+\item \textbf{Sharkovsky (1964):}
+      Complete ordering of which periods imply which others.
+\item \textbf{Hopf Bifurcation Theorem:}
+      Eigenvalues crossing the imaginary axis $\Rightarrow$
+      birth/death of a limit cycle.
+\item \textbf{Liouville's Theorem (Hamiltonian):}
+      Phase-space volume is preserved; no attractors in Hamiltonian systems.
+\item \textbf{KAM Theorem:}
+      Most sufficiently irrational tori survive small Hamiltonian perturbations.
+\item \textbf{Li\'enard's Theorem:}
+      Conditions for a unique stable limit cycle in Li\'enard systems.
+\item \textbf{Singer's Theorem:}
+      Negative Schwarzian derivative $\Rightarrow$ at most one stable
+      orbit per critical point; governs logistic map structure.
 \end{enumerate}
+
+\section{Normal Forms and Center Manifold}\label{app:normal-forms}
+
+\subsection{Center Manifold Theorem}
+
+When a fixed point has some eigenvalues with zero real part and others
+with negative real part, the long-time behavior is governed by the
+\textbf{center manifold}.
+
+\begin{theorem}[Center Manifold Theorem---Informal]
+Consider $\dot{\vec{x}} = \vec{F}(\vec{x})$ near the origin, with
+the Jacobian having $n_c$ eigenvalues with $\text{Re}=0$,
+$n_s$ with $\text{Re}<0$, and $n_u$ with $\text{Re}>0$.
+Then there exist invariant manifolds:
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Center manifold} $W^c$ of dimension $n_c$: tangent to
+    the eigenspace of the zero-real-part eigenvalues.
+  \item \textbf{Stable manifold} $W^s$ of dimension $n_s$.
+  \item \textbf{Unstable manifold} $W^u$ of dimension $n_u$.
+\end{itemize}
+The dynamics on $W^c$ determines the stability and bifurcation type
+at the fixed point.  Trajectories approach $W^c$ exponentially fast
+(if $n_u = 0$), so the reduced system on $W^c$ captures the essential
+nonlinear dynamics.
+\end{theorem}
+
+\textbf{Application to bifurcations.}  At a saddle-node bifurcation,
+the Jacobian has one zero eigenvalue.  The center manifold is
+1-dimensional, and the dynamics on it reduces to the 1D normal form
+$\dot{x} = r + x^2$---exactly the normal form studied in
+Section~\ref{sec:saddle-node}.
+
+\subsection{Normal Forms}
+
+Near a bifurcation, coordinate changes can simplify the vector field
+to a \textbf{normal form} that captures the essential dynamics.  The
+key idea: higher-order terms that do not affect the qualitative behavior
+can be removed by polynomial coordinate transformations.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Bifurcation} & \textbf{Eigenvalue condition} & \textbf{Normal form} \\
+\midrule
+Saddle-node & $\lambda = 0$ & $\dot{x} = \mu + x^2$ \\
+Transcritical & $\lambda = 0$ & $\dot{x} = \mu x - x^2$ \\
+Pitchfork (super) & $\lambda = 0$, symmetry & $\dot{x} = \mu x - x^3$ \\
+Pitchfork (sub) & $\lambda = 0$, symmetry & $\dot{x} = \mu x + x^3$ \\
+Hopf (super) & $\lambda = \pm i\omega$ & $\dot{r} = \mu r - r^3$ \\
+Hopf (sub) & $\lambda = \pm i\omega$ & $\dot{r} = \mu r + r^3$ \\
+Period-doubling & multiplier $= -1$ & $x_{n+1} = -(1+\mu)x_n + x_n^3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \section{Useful Mathematical Facts}\label{app:math-facts}
 
